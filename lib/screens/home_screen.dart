@@ -6,6 +6,7 @@ import '../models/horoscope.dart';
 import '../services/horoscope_service.dart';
 import '../services/sign_calculator.dart';
 import '../services/color_mapper.dart';
+import '../services/widget_service.dart';
 import 'detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -242,15 +243,28 @@ class _HomeScreenState extends State<HomeScreen> {
         }
 
         final list = snapshot.data!;
+        final horoscopes = snapshot.data!;
+        
+        // Update Widget if user sign is set
+        if (_userSign != null) {
+          try {
+            final userHoroscope = horoscopes.firstWhere((h) => h.signName == _userSign);
+            WidgetService.updateWidget(userHoroscope);
+          } catch (_) {
+            // Handle case where user's sign is not found in the fetched horoscopes
+            // This might happen if the data is incomplete or _userSign is invalid.
+          }
+        }
+
         return SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           sliver: SliverList(
             delegate: SliverChildBuilderDelegate(
               (context, index) {
-                final item = list[index];
+                final item = horoscopes[index];
                 return _buildRankCard(item, index);
               },
-              childCount: list.length,
+              childCount: horoscopes.length,
             ),
           ),
         );
