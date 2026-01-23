@@ -19,14 +19,14 @@ class HoroscopeWidgetProvider : HomeWidgetProvider() {
     ) {
         for (appWidgetId in appWidgetIds) {
             val views = RemoteViews(context.packageName, R.layout.horoscope_widget_layout).apply {
-                val sign = widgetData.getString("widget_sign", "Pick Birthday")
-                val rank = widgetData.getString("widget_rank", "")
-                val item = widgetData.getString("widget_item", "...")
-                val color = widgetData.getString("widget_color", "...")
+                val sign = widgetData.getString("widget_sign", "Pick Birthday") ?: "Pick Birthday"
+                val rank = widgetData.getString("widget_rank", "") ?: ""
+                val item = widgetData.getString("widget_item", "...") ?: "..."
+                val color = widgetData.getString("widget_color", "...") ?: "..."
 
                 setTextViewText(R.id.widget_sign, sign)
                 
-                if (rank!!.isNotEmpty()) {
+                if (rank.isNotEmpty()) {
                     setTextViewText(R.id.widget_rank_large, "#$rank")
                     setViewVisibility(R.id.widget_rank_large, View.VISIBLE)
                 } else {

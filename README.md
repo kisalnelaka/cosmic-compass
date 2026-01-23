@@ -6,7 +6,6 @@
 
 **Ohayo Asahi** is a stunning, cross-platform Flutter application designed to bring the famous Japanese "Oha Asa" daily horoscopes to your fingertips. Built with a focus on visual excellence and seamless automation, it offers a premium experience for tracking your daily luck metrics.
 
-![Ohayo Asahi Showcase](assets/showcase.png)
 
 ---
 
