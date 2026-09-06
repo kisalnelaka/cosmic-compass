@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../models/horoscope.dart';
+import '../services/color_mapper.dart';
+import '../widgets/glass_card.dart';
+import '../widgets/luck_indicator_bar.dart';
 
 class DetailDialog extends StatelessWidget {
   final Horoscope horoscope;
@@ -10,201 +13,219 @@ class DetailDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final color = ColorMapper.getColor(horoscope.luckyColor);
+    final isTopThree = horoscope.rank <= 3;
+
     return Dialog(
       backgroundColor: Colors.transparent,
-      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
-      child: Container(
-        decoration: BoxDecoration(
-          color: const Color(0xFF1E1E1E),
-          borderRadius: BorderRadius.circular(32),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              _buildHeader(),
-              Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  children: [
-                    _buildLuckSection(),
-                    const SizedBox(height: 32),
-                    _buildAdviceSection(),
-                    const SizedBox(height: 32),
-                    _buildBottomInfo(),
-                    const SizedBox(height: 32),
-                    _buildCloseButton(context),
-                  ],
-                ),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 480),
+          child: GlassCard(
+            backgroundColor: const Color(0xFF0F172A).withValues(alpha: 0.96),
+            borderColor: isTopThree ? const Color(0xFFFFD700).withValues(alpha: 0.5) : Colors.white.withValues(alpha: 0.15),
+            borderRadius: 24,
+            padding: const EdgeInsets.all(22),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Top Row: Rank Badge, Sign Name & Icon, Close Button
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: 48,
+                            height: 48,
+                            decoration: BoxDecoration(
+                              gradient: isTopThree
+                                  ? const LinearGradient(colors: [Color(0xFFFFD700), Color(0xFFFFA000)])
+                                  : const LinearGradient(colors: [Color(0xFF334155), Color(0xFF1E293B)]),
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                            child: Center(
+                              child: Text(
+                                '#${horoscope.rank}',
+                                style: GoogleFonts.outfit(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w900,
+                                  color: isTopThree ? Colors.black : Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 14),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    '${horoscope.icon} ${horoscope.signName}',
+                                    style: GoogleFonts.outfit(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    horoscope.signNameJapanese,
+                                    style: TextStyle(fontSize: 13, color: Colors.white.withValues(alpha: 0.6)),
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                horoscope.period,
+                                style: TextStyle(fontSize: 12, color: Colors.white.withValues(alpha: 0.6)),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: const Icon(Icons.close_rounded, color: Colors.white54, size: 20),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 18),
+
+                  // Daily Advice Box
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.05),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(Icons.auto_awesome, color: Color(0xFFFFD700), size: 16),
+                            const SizedBox(width: 8),
+                            Text(
+                              'DAILY ADVICE',
+                              style: GoogleFonts.outfit(
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFFFFD700),
+                                letterSpacing: 1.2,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          horoscope.description,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            height: 1.5,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Lucky Color & Lucky Item
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.06),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'LUCKY COLOR',
+                                style: GoogleFonts.outfit(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white60, letterSpacing: 0.8),
+                              ),
+                              const SizedBox(height: 6),
+                              Row(
+                                children: [
+                                  Container(width: 14, height: 14, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      horoscope.luckyColor,
+                                      style: const TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.w600),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.06),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'LUCKY ITEM',
+                                style: GoogleFonts.outfit(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white60, letterSpacing: 0.8),
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                horoscope.luckyItem,
+                                style: const TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+
+                  // 4 Segmented Luck Indicator Bars
+                  LuckIndicatorBar(label: 'Money', score: horoscope.moneyLuck, icon: Icons.attach_money_rounded, color: const Color(0xFFFFD700)),
+                  LuckIndicatorBar(label: 'Love', score: horoscope.loveLuck, icon: Icons.favorite_rounded, color: const Color(0xFFFF4081)),
+                  LuckIndicatorBar(label: 'Work', score: horoscope.workLuck, icon: Icons.work_outline_rounded, color: const Color(0xFF00E5FF)),
+                  LuckIndicatorBar(label: 'Health', score: horoscope.healthLuck, icon: Icons.spa_outlined, color: const Color(0xFF69F0AE)),
+                  const SizedBox(height: 20),
+
+                  // Dismiss Button
+                  SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white.withValues(alpha: 0.08),
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                      ),
+                      child: Text('Close', style: GoogleFonts.outfit(fontSize: 14, fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ).animate().scale(duration: 400.ms, curve: Curves.easeOutBack),
-      ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 40),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF6A11CB), Color(0xFF2575FC)],
-        ),
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
-      ),
-      child: Column(
-        children: [
-          Text(
-            horoscope.icon,
-            style: const TextStyle(fontSize: 64),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            horoscope.signName,
-            style: GoogleFonts.outfit(
-              fontSize: 32,
-              fontWeight: FontWeight.w900,
-              color: Colors.white,
             ),
-          ),
-          Text(
-            horoscope.period,
-            style: TextStyle(color: Colors.white70, letterSpacing: 1),
-          ),
-          const SizedBox(height: 20),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              'RANK #${horoscope.rank}',
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildLuckSection() {
-    return Column(
-      children: [
-        _buildLuckMeter('Money', horoscope.moneyLuck, Colors.amber),
-        const SizedBox(height: 16),
-        _buildLuckMeter('Love', horoscope.loveLuck, Colors.pinkAccent),
-        const SizedBox(height: 16),
-        _buildLuckMeter('Work', horoscope.workLuck, Colors.blueAccent),
-        const SizedBox(height: 16),
-        _buildLuckMeter('Health', horoscope.healthLuck, Colors.greenAccent),
-      ],
-    );
-  }
-
-  Widget _buildLuckMeter(String label, int value, Color color) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(label, style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.bold)),
-            Text('${value * 20}%', style: TextStyle(color: color, fontWeight: FontWeight.bold)),
-          ],
+          ).animate().scale(duration: 300.ms, curve: Curves.easeOutBack),
         ),
-        const SizedBox(height: 8),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(4),
-          child: LinearProgressIndicator(
-            value: value / 5.0,
-            backgroundColor: Colors.white10,
-            color: color,
-            minHeight: 8,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildAdviceSection() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Row(
-            children: [
-              Icon(Icons.auto_awesome, color: Colors.amber, size: 20),
-              SizedBox(width: 8),
-              Text('DAILY ADVICE', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            horoscope.description,
-            style: const TextStyle(color: Colors.white70, height: 1.6, fontSize: 16),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBottomInfo() {
-    return Row(
-      children: [
-        Expanded(child: _buildInfoCard('Lucky Color', horoscope.luckyColor, Icons.palette, Colors.pinkAccent)),
-        const SizedBox(width: 16),
-        Expanded(child: _buildInfoCard('Lucky Key', horoscope.luckyItem, Icons.key, Colors.cyanAccent)),
-      ],
-    );
-  }
-
-  Widget _buildInfoCard(String title, String value, IconData icon, Color color) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withValues(alpha: 0.2)),
-      ),
-      child: Column(
-        children: [
-          Icon(icon, color: color, size: 24),
-          const SizedBox(height: 8),
-          Text(title, style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 4),
-          Text(
-            value,
-            textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCloseButton(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 60,
-      child: ElevatedButton(
-        onPressed: () => Navigator.pop(context),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white.withValues(alpha: 0.1),
-          foregroundColor: Colors.white,
-          elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        ),
-        child: const Text('GOT IT', style: TextStyle(letterSpacing: 2, fontWeight: FontWeight.bold)),
       ),
     );
   }

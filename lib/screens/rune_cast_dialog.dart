@@ -41,12 +41,15 @@ class _RuneCastDialogState extends State<RuneCastDialog> {
     return Dialog(
       backgroundColor: Colors.transparent,
       insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-      child: GlassCard(
-        backgroundColor: const Color(0xFF0F172A).withValues(alpha: 0.95),
-        borderColor: const Color(0xFF38BDF8).withValues(alpha: 0.4),
-        borderRadius: 24,
-        padding: const EdgeInsets.all(24),
-        child: Column(
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 480),
+          child: GlassCard(
+            backgroundColor: const Color(0xFF0F172A).withValues(alpha: 0.95),
+            borderColor: const Color(0xFF38BDF8).withValues(alpha: 0.4),
+            borderRadius: 24,
+            padding: const EdgeInsets.all(24),
+            child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Row(
@@ -209,6 +212,8 @@ class _RuneCastDialogState extends State<RuneCastDialog> {
           ],
         ),
       ),
-    );
+    ),
+  ),
+);
   }
 }
