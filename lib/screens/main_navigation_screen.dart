@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../models/user_profile.dart';
 import '../services/profile_service.dart';
-import '../widgets/responsive_wrapper.dart';
 import 'today_screen.dart';
 import 'profile_screen.dart';
 import 'comparison_screen.dart';
@@ -54,7 +53,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   void _promptFirstTimeSetup() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (context) => ProfileSetupDialog(
         initialProfile: _userProfile,
         isFirstTime: true,
@@ -127,9 +126,12 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         ),
         child: SafeArea(
           bottom: false,
-          child: ResponsiveWrapper(
-            maxWidth: 880,
-            child: screens[_currentIndex],
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 880),
+              child: screens[_currentIndex],
+            ),
           ),
         ),
       ),
@@ -143,40 +145,47 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             ),
           ),
         ),
-        child: ResponsiveWrapper(
-          maxWidth: 880,
-          child: BottomNavigationBar(
-            currentIndex: _currentIndex,
-            onTap: (index) => setState(() => _currentIndex = index),
-            type: BottomNavigationBarType.fixed,
-            backgroundColor: Colors.transparent,
-            selectedItemColor: const Color(0xFFFFD700),
-            unselectedItemColor: Colors.white.withValues(alpha: 0.45),
-            selectedLabelStyle: GoogleFonts.outfit(fontSize: 11.5, fontWeight: FontWeight.bold),
-            unselectedLabelStyle: GoogleFonts.outfit(fontSize: 11.5),
-            elevation: 0,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.today_rounded),
-                activeIcon: Icon(Icons.today_rounded, color: Color(0xFFFFD700)),
-                label: 'Daily Forecast',
+        child: SafeArea(
+          top: false,
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            heightFactor: 1.0,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 880),
+              child: BottomNavigationBar(
+                currentIndex: _currentIndex,
+                onTap: (index) => setState(() => _currentIndex = index),
+                type: BottomNavigationBarType.fixed,
+                backgroundColor: Colors.transparent,
+                selectedItemColor: const Color(0xFFFFD700),
+                unselectedItemColor: Colors.white.withValues(alpha: 0.45),
+                selectedLabelStyle: GoogleFonts.outfit(fontSize: 11.5, fontWeight: FontWeight.bold),
+                unselectedLabelStyle: GoogleFonts.outfit(fontSize: 11.5),
+                elevation: 0,
+                items: const [
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.today_rounded),
+                    activeIcon: Icon(Icons.today_rounded, color: Color(0xFFFFD700)),
+                    label: 'Daily Forecast',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.auto_awesome_rounded),
+                    activeIcon: Icon(Icons.auto_awesome_rounded, color: Color(0xFFFFD700)),
+                    label: 'My Charts',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.compare_arrows_rounded),
+                    activeIcon: Icon(Icons.compare_arrows_rounded, color: Color(0xFFFFD700)),
+                    label: 'Comparison',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.menu_book_rounded),
+                    activeIcon: Icon(Icons.menu_book_rounded, color: Color(0xFFFFD700)),
+                    label: 'Codex',
+                  ),
+                ],
               ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.auto_awesome_rounded),
-                activeIcon: Icon(Icons.auto_awesome_rounded, color: Color(0xFFFFD700)),
-                label: 'My Charts',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.compare_arrows_rounded),
-                activeIcon: Icon(Icons.compare_arrows_rounded, color: Color(0xFFFFD700)),
-                label: 'Comparison',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.menu_book_rounded),
-                activeIcon: Icon(Icons.menu_book_rounded, color: Color(0xFFFFD700)),
-                label: 'Codex',
-              ),
-            ],
+            ),
           ),
         ),
       ),

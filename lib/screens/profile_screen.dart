@@ -20,9 +20,7 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final synthesis = ProfileService.synthesize(profile);
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: CustomScrollView(
+    return CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
           // Cosmic Hero Header
@@ -217,8 +215,7 @@ class ProfileScreen extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
+      );
   }
 
   Widget _buildArchetypeHero(CosmicSynthesis synthesis) {

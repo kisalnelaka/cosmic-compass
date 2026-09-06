@@ -39,9 +39,7 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
       DateTime.now(),
     );
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: CustomScrollView(
+    return CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
           // Header
@@ -317,8 +315,7 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
           ],
           const SliverToBoxAdapter(child: SizedBox(height: 40)),
         ],
-      ),
-    );
+      );
   }
 
   Widget _buildConvergenceCard(TraditionConvergence conv) {

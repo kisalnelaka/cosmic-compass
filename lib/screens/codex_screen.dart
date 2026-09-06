@@ -218,9 +218,7 @@ class CodexScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: CustomScrollView(
+    return CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
           SliverToBoxAdapter(
@@ -270,8 +268,7 @@ class CodexScreen extends StatelessWidget {
           ),
           const SliverToBoxAdapter(child: SizedBox(height: 40)),
         ],
-      ),
-    );
+      );
   }
 
   Widget _buildCodexCard(CodexEntry entry) {

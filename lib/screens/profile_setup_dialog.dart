@@ -121,10 +121,9 @@ class _ProfileSetupDialogState extends State<ProfileSetupDialog> {
     return Dialog(
       backgroundColor: Colors.transparent,
       insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 480),
-          child: GlassCard(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 480),
+        child: GlassCard(
             backgroundColor: const Color(0xFF0F1629).withValues(alpha: 0.96),
             borderColor: const Color(0xFFFFD700).withValues(alpha: 0.35),
             borderRadius: 24,
@@ -419,12 +418,27 @@ class _ProfileSetupDialogState extends State<ProfileSetupDialog> {
                       ),
                     ),
                   ),
+                  if (widget.isFirstTime) ...[
+                    const SizedBox(height: 10),
+                    Center(
+                      child: TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text(
+                          'Explore Default Charts First',
+                          style: GoogleFonts.outfit(
+                            fontSize: 13,
+                            color: Colors.white70,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 }
