@@ -47,12 +47,12 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
           // Header
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'CROSS-CULTURAL SYNTHESIS',
+                    'CROSS-CULTURAL HARMONY',
                     style: GoogleFonts.outfit(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
@@ -62,17 +62,17 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Where Traditions Converge',
+                    'Where World Cultures Agree on You',
                     style: GoogleFonts.outfit(
-                      fontSize: 26,
+                      fontSize: 24,
                       fontWeight: FontWeight.w900,
                       color: Colors.white,
                     ),
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    'Comparing independent civilizational cycles to reveal where predictions overlap',
-                    style: TextStyle(fontSize: 13, color: Colors.white.withValues(alpha: 0.7)),
+                    'Across thousands of years and continents, independent civilizations developed unique cosmic systems. Here is where they arrive at identical conclusions about your personality and strengths.',
+                    style: TextStyle(fontSize: 13, color: Colors.white.withValues(alpha: 0.75), height: 1.4),
                   ),
                 ],
               ),
@@ -104,22 +104,22 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                         onTap: () => setState(() => _currentViewMode = 0),
                         borderRadius: BorderRadius.circular(14),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          padding: const EdgeInsets.symmetric(vertical: 11),
                           decoration: BoxDecoration(
                             gradient: _currentViewMode == 0
                                 ? const LinearGradient(
-                                    colors: [Color(0xFF8E2DE2), Color(0xFF4A00E0)],
+                                    colors: [Color(0xFFFFD700), Color(0xFFFFA000)],
                                   )
                                 : null,
                             borderRadius: BorderRadius.circular(14),
                           ),
                           child: Center(
                             child: Text(
-                              'Concordance & Overlaps',
+                              'Shared Traits & Overlaps',
                               style: GoogleFonts.outfit(
                                 fontSize: 13,
                                 fontWeight: _currentViewMode == 0 ? FontWeight.bold : FontWeight.w500,
-                                color: _currentViewMode == 0 ? Colors.white : Colors.white70,
+                                color: _currentViewMode == 0 ? Colors.black : Colors.white70,
                               ),
                             ),
                           ),
@@ -131,11 +131,11 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                         onTap: () => setState(() => _currentViewMode = 1),
                         borderRadius: BorderRadius.circular(14),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          padding: const EdgeInsets.symmetric(vertical: 11),
                           decoration: BoxDecoration(
                             gradient: _currentViewMode == 1
                                 ? const LinearGradient(
-                                    colors: [Color(0xFF8E2DE2), Color(0xFF4A00E0)],
+                                    colors: [Color(0xFFFFD700), Color(0xFFFFA000)],
                                   )
                                 : null,
                             borderRadius: BorderRadius.circular(14),
@@ -146,7 +146,7 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                               style: GoogleFonts.outfit(
                                 fontSize: 13,
                                 fontWeight: _currentViewMode == 1 ? FontWeight.bold : FontWeight.w500,
-                                color: _currentViewMode == 1 ? Colors.white : Colors.white70,
+                                color: _currentViewMode == 1 ? Colors.black : Colors.white70,
                               ),
                             ),
                           ),
@@ -198,7 +198,7 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                       ),
                       child: Text(
                         '${synthesis.convergences.length} Overlap Themes',
-                        style: GoogleFonts.outfit(fontSize: 11, fontWeight: FontWeight.bold, color: const Color(0xFFFFD700)),
+                        style: GoogleFonts.outfit(fontSize: 11.5, fontWeight: FontWeight.bold, color: const Color(0xFFFFD700)),
                       ),
                     ),
                   ],
@@ -224,13 +224,23 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
-                child: Text(
-                  'Today’s Prediction Overlaps',
-                  style: GoogleFonts.outfit(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Today’s Prediction Overlaps',
+                      style: GoogleFonts.outfit(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Points where independent daily astrological cycles harmonize for your specific chart',
+                      style: TextStyle(fontSize: 12.5, color: Colors.white.withValues(alpha: 0.7)),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -269,13 +279,13 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                         label: Text(
                           reg,
                           style: GoogleFonts.outfit(
-                            fontSize: 12,
+                            fontSize: 12.5,
                             fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                            color: isSelected ? Colors.white : Colors.white70,
+                            color: isSelected ? Colors.black : Colors.white70,
                           ),
                         ),
                         backgroundColor: Colors.white.withValues(alpha: 0.06),
-                        selectedColor: const Color(0xFF6A11CB),
+                        selectedColor: const Color(0xFFFFD700),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         side: BorderSide(
                           color: isSelected ? const Color(0xFFFFD700) : Colors.white.withValues(alpha: 0.15),
@@ -330,7 +340,7 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                     Text(
                       conv.title,
                       style: GoogleFonts.outfit(
-                        fontSize: 16,
+                        fontSize: 16.5,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
@@ -338,7 +348,7 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                   ],
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: const Color(0xFF00E5FF).withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(8),
@@ -347,7 +357,7 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                   child: Text(
                     '${conv.agreementPercentage}% Concordance',
                     style: GoogleFonts.outfit(
-                      fontSize: 11,
+                      fontSize: 11.5,
                       fontWeight: FontWeight.bold,
                       color: const Color(0xFF00E5FF),
                     ),
@@ -355,44 +365,59 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 10),
-            Text(
-              'Consensus: ${conv.consensusTrait}',
-              style: GoogleFonts.outfit(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFFFFD700),
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFD700).withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0xFFFFD700).withValues(alpha: 0.3)),
+              ),
+              child: Text(
+                'Consensus Insight: ${conv.consensusTrait}',
+                style: GoogleFonts.outfit(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFFFFD700),
+                ),
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             Container(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.04),
-                borderRadius: BorderRadius.circular(10),
+                color: Colors.white.withValues(alpha: 0.05),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'AGREEING TRADITIONS:',
-                    style: GoogleFonts.outfit(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white54),
+                    'CONVERGING TRADITIONS',
+                    style: GoogleFonts.outfit(fontSize: 10.5, fontWeight: FontWeight.bold, color: Colors.white70, letterSpacing: 0.8),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 6),
                   ...conv.agreeingTraditions.map((t) => Padding(
-                        padding: const EdgeInsets.only(bottom: 2),
-                        child: Text('• $t', style: const TextStyle(fontSize: 11, color: Colors.white70)),
+                        padding: const EdgeInsets.only(bottom: 3.5),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('• ', style: TextStyle(color: Color(0xFF00E5FF), fontWeight: FontWeight.bold)),
+                            Expanded(child: Text(t, style: const TextStyle(fontSize: 13, color: Colors.white, height: 1.35))),
+                          ],
+                        ),
                       )),
                 ],
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 12),
             Text(
               conv.analyticalSynthesis,
               style: TextStyle(
-                fontSize: 12,
-                height: 1.4,
-                color: Colors.white.withValues(alpha: 0.85),
+                fontSize: 13.5,
+                height: 1.5,
+                color: Colors.white.withValues(alpha: 0.95),
               ),
             ),
           ],
@@ -421,7 +446,7 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                       Text(
                         pt.domain.toUpperCase(),
                         style: GoogleFonts.outfit(
-                          fontSize: 10,
+                          fontSize: 10.5,
                           fontWeight: FontWeight.bold,
                           color: pt.color,
                           letterSpacing: 1.2,
@@ -430,7 +455,7 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                       Text(
                         pt.consensusTitle,
                         style: GoogleFonts.outfit(
-                          fontSize: 15,
+                          fontSize: 15.5,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
@@ -440,23 +465,32 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
-            Text(
-              pt.synthesis,
-              style: TextStyle(fontSize: 12, height: 1.35, color: Colors.white.withValues(alpha: 0.85)),
+            const SizedBox(height: 10),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.04),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+              ),
+              child: Text(
+                pt.synthesis,
+                style: const TextStyle(fontSize: 13.5, height: 1.45, color: Colors.white),
+              ),
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 10),
             Wrap(
               spacing: 6,
-              runSpacing: 4,
+              runSpacing: 6,
               children: pt.convergingTraditions
                   .map((t) => Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.05),
-                          borderRadius: BorderRadius.circular(6),
+                          color: pt.color.withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: pt.color.withValues(alpha: 0.25)),
                         ),
-                        child: Text(t, style: const TextStyle(fontSize: 10, color: Colors.white60)),
+                        child: Text(t, style: TextStyle(fontSize: 11.5, color: Colors.white.withValues(alpha: 0.95))),
                       ))
                   .toList(),
             ),
@@ -498,21 +532,21 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                       Text(
                         sign.systemName,
                         style: GoogleFonts.outfit(
-                          fontSize: 11,
+                          fontSize: 11.5,
                           fontWeight: FontWeight.bold,
                           color: sign.accentColor,
                           letterSpacing: 1,
                         ),
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2.5),
                         decoration: BoxDecoration(
                           color: Colors.white.withValues(alpha: 0.08),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
                           sign.element,
-                          style: const TextStyle(fontSize: 10, color: Colors.white70),
+                          style: const TextStyle(fontSize: 11, color: Colors.white, fontWeight: FontWeight.w600),
                         ),
                       ),
                     ],
@@ -521,7 +555,7 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                   Text(
                     sign.signName,
                     style: GoogleFonts.outfit(
-                      fontSize: 16,
+                      fontSize: 16.5,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
@@ -530,9 +564,9 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                   Text(
                     sign.essence,
                     style: TextStyle(
-                      fontSize: 12,
-                      height: 1.35,
-                      color: Colors.white.withValues(alpha: 0.8),
+                      fontSize: 13,
+                      height: 1.45,
+                      color: Colors.white.withValues(alpha: 0.85),
                     ),
                   ),
                 ],

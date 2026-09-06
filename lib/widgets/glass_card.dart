@@ -8,6 +8,7 @@ class GlassCard extends StatelessWidget {
   final EdgeInsetsGeometry? margin;
   final Color? borderColor;
   final Color? backgroundColor;
+  final Gradient? gradient;
   final VoidCallback? onTap;
 
   const GlassCard({
@@ -18,6 +19,7 @@ class GlassCard extends StatelessWidget {
     this.margin,
     this.borderColor,
     this.backgroundColor,
+    this.gradient,
     this.onTap,
   });
 
@@ -30,17 +32,20 @@ class GlassCard extends StatelessWidget {
         child: Container(
           padding: padding,
           decoration: BoxDecoration(
-            color: backgroundColor ?? Colors.white.withValues(alpha: 0.08),
+            color: gradient == null
+                ? (backgroundColor ?? const Color(0xFF131A2E).withValues(alpha: 0.72))
+                : null,
+            gradient: gradient,
             borderRadius: BorderRadius.circular(borderRadius),
             border: Border.all(
-              color: borderColor ?? Colors.white.withValues(alpha: 0.15),
+              color: borderColor ?? Colors.white.withValues(alpha: 0.12),
               width: 1.2,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.25),
+                color: Colors.black.withValues(alpha: 0.28),
                 blurRadius: 18,
-                offset: const Offset(0, 8),
+                offset: const Offset(0, 6),
               ),
             ],
           ),
@@ -54,9 +59,13 @@ class GlassCard extends StatelessWidget {
     }
 
     if (onTap != null) {
-      return GestureDetector(
-        onTap: onTap,
-        child: content,
+      return Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(borderRadius),
+          child: content,
+        ),
       );
     }
 

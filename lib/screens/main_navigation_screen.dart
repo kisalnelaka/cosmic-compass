@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../models/user_profile.dart';
 import '../services/profile_service.dart';
+import '../widgets/responsive_wrapper.dart';
 import 'today_screen.dart';
 import 'profile_screen.dart';
 import 'comparison_screen.dart';
@@ -43,7 +44,28 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       setState(() {
         _isLoading = false;
       });
+      // First-time user detected: automatically prompt for birth details with smooth entry
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _promptFirstTimeSetup();
+      });
     }
+  }
+
+  void _promptFirstTimeSetup() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => ProfileSetupDialog(
+        initialProfile: _userProfile,
+        isFirstTime: true,
+        onSave: (newProfile) async {
+          setState(() {
+            _userProfile = newProfile;
+          });
+          await ProfileService.saveProfile(newProfile);
+        },
+      ),
+    );
   }
 
   void _openProfileEditor() {
@@ -51,6 +73,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       context: context,
       builder: (context) => ProfileSetupDialog(
         initialProfile: _userProfile,
+        isFirstTime: false,
         onSave: (newProfile) async {
           setState(() {
             _userProfile = newProfile;
@@ -65,7 +88,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return const Scaffold(
-        backgroundColor: Color(0xFF0A0D1A),
+        backgroundColor: Color(0xFF070913),
         body: Center(
           child: CircularProgressIndicator(color: Color(0xFFFFD700)),
         ),
@@ -88,67 +111,73 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     ];
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0xFF070913),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
             colors: [
-              Color(0xFF090B16), // Deep Cosmic Void
-              Color(0xFF131127), // Nebula Indigo
-              Color(0xFF1C1335), // Mystic Plum
+              Color(0xFF090C1B), // Midnight Void
+              Color(0xFF0F172A), // Celestial Slate
+              Color(0xFF131127), // Deep Nebula
             ],
             stops: [0.0, 0.5, 1.0],
           ),
         ),
         child: SafeArea(
           bottom: false,
-          child: screens[_currentIndex],
+          child: ResponsiveWrapper(
+            maxWidth: 880,
+            child: screens[_currentIndex],
+          ),
         ),
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFF0F1226).withValues(alpha: 0.96),
+          color: const Color(0xFF0B0F1F).withValues(alpha: 0.98),
           border: Border(
             top: BorderSide(
-              color: Colors.white.withValues(alpha: 0.12),
+              color: Colors.white.withValues(alpha: 0.08),
               width: 1.0,
             ),
           ),
         ),
-        child: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: (index) => setState(() => _currentIndex = index),
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: Colors.transparent,
-          selectedItemColor: const Color(0xFFFFD700),
-          unselectedItemColor: Colors.white.withValues(alpha: 0.45),
-          selectedLabelStyle: GoogleFonts.outfit(fontSize: 11, fontWeight: FontWeight.bold),
-          unselectedLabelStyle: GoogleFonts.outfit(fontSize: 11),
-          elevation: 0,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.today_rounded),
-              activeIcon: Icon(Icons.today_rounded, color: Color(0xFFFFD700)),
-              label: 'Daily Forecast',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.auto_awesome_rounded),
-              activeIcon: Icon(Icons.auto_awesome_rounded, color: Color(0xFFFFD700)),
-              label: 'My Charts',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.compare_arrows_rounded),
-              activeIcon: Icon(Icons.compare_arrows_rounded, color: Color(0xFFFFD700)),
-              label: 'Comparison',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.menu_book_rounded),
-              activeIcon: Icon(Icons.menu_book_rounded, color: Color(0xFFFFD700)),
-              label: 'Codex',
-            ),
-          ],
+        child: ResponsiveWrapper(
+          maxWidth: 880,
+          child: BottomNavigationBar(
+            currentIndex: _currentIndex,
+            onTap: (index) => setState(() => _currentIndex = index),
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: Colors.transparent,
+            selectedItemColor: const Color(0xFFFFD700),
+            unselectedItemColor: Colors.white.withValues(alpha: 0.45),
+            selectedLabelStyle: GoogleFonts.outfit(fontSize: 11.5, fontWeight: FontWeight.bold),
+            unselectedLabelStyle: GoogleFonts.outfit(fontSize: 11.5),
+            elevation: 0,
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.today_rounded),
+                activeIcon: Icon(Icons.today_rounded, color: Color(0xFFFFD700)),
+                label: 'Daily Forecast',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.auto_awesome_rounded),
+                activeIcon: Icon(Icons.auto_awesome_rounded, color: Color(0xFFFFD700)),
+                label: 'My Charts',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.compare_arrows_rounded),
+                activeIcon: Icon(Icons.compare_arrows_rounded, color: Color(0xFFFFD700)),
+                label: 'Comparison',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.menu_book_rounded),
+                activeIcon: Icon(Icons.menu_book_rounded, color: Color(0xFFFFD700)),
+                label: 'Codex',
+              ),
+            ],
+          ),
         ),
       ),
     );

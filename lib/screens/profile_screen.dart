@@ -28,7 +28,7 @@ class ProfileScreen extends StatelessWidget {
           // Cosmic Hero Header
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -36,21 +36,34 @@ class ProfileScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'MY COSMIC PROFILE',
+                        'MY COSMIC BLUEPRINT',
                         style: GoogleFonts.outfit(
-                          fontSize: 13,
+                          fontSize: 12,
                           fontWeight: FontWeight.w700,
                           color: const Color(0xFFFFD700),
-                          letterSpacing: 3,
+                          letterSpacing: 2.5,
                         ),
                       ),
-                      IconButton(
+                      TextButton.icon(
                         onPressed: onEditProfile,
-                        icon: const Icon(Icons.edit_calendar_rounded, color: Color(0xFFFFD700)),
+                        icon: const Icon(Icons.edit_calendar_rounded, color: Color(0xFFFFD700), size: 16),
+                        label: Text(
+                          'Edit Birth Data',
+                          style: GoogleFonts.outfit(
+                            fontSize: 12.5,
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFFFFD700),
+                          ),
+                        ),
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          backgroundColor: Colors.white.withValues(alpha: 0.08),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 10),
                   _buildArchetypeHero(synthesis),
                 ],
               ),
@@ -60,32 +73,38 @@ class ProfileScreen extends StatelessWidget {
           // Universal Synthesis Mantra
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
               child: GlassCard(
-                backgroundColor: const Color(0xFF1E1B4B).withValues(alpha: 0.7),
+                backgroundColor: const Color(0xFF161E36).withValues(alpha: 0.85),
                 borderColor: const Color(0xFF9B51E0).withValues(alpha: 0.4),
                 borderRadius: 18,
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(18),
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text('✨', style: TextStyle(fontSize: 24)),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 14),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'UNIVERSAL SYNTHESIS MANTRA',
-                            style: GoogleFonts.outfit(fontSize: 10, fontWeight: FontWeight.bold, color: const Color(0xFFFFD700)),
+                            'CORE PERSONAL AFFIRMATION',
+                            style: GoogleFonts.outfit(
+                              fontSize: 10.5,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFFFFD700),
+                              letterSpacing: 1.2,
+                            ),
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            synthesis.universalMantra,
+                            '"${synthesis.universalMantra}"',
                             style: GoogleFonts.outfit(
-                              fontSize: 13,
+                              fontSize: 14,
                               fontStyle: FontStyle.italic,
-                              color: Colors.white.withValues(alpha: 0.95),
-                              height: 1.35,
+                              color: Colors.white,
+                              height: 1.45,
                             ),
                           ),
                         ],
@@ -100,14 +119,24 @@ class ProfileScreen extends StatelessWidget {
           // Cultural Charts Title
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 18, 20, 10),
-              child: Text(
-                '11 Global Astrological Charts',
-                style: GoogleFonts.outfit(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Your Signs Across 11 World Traditions',
+                    style: GoogleFonts.outfit(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    'Calculated accurately from your exact birth date, time, and location',
+                    style: TextStyle(fontSize: 12.5, color: Colors.white.withValues(alpha: 0.7)),
+                  ),
+                ],
               ),
             ),
           ),
@@ -118,69 +147,70 @@ class ProfileScreen extends StatelessWidget {
             sliver: SliverList(
               delegate: SliverChildListDelegate([
                 _buildCultureCard(synthesis.western, [
-                  'Moon Sign: ${synthesis.western.moonSign}',
-                  'Rising (Ascendant): ${synthesis.western.ascendantSign}',
-                  'Modality: ${synthesis.western.modality}',
+                  'Sun Sign: ${synthesis.western.signName}',
+                  'Moon Sign (Inner Emotional Core): ${synthesis.western.moonSign}',
+                  'Rising / Ascendant (Outer Persona): ${synthesis.western.ascendantSign}',
+                  'Modality: ${synthesis.western.modality} Energy',
                 ]),
                 _buildCultureCard(synthesis.bazi, [
                   'Year Pillar: ${synthesis.bazi.yearPillar.displayName}',
                   'Month Pillar: ${synthesis.bazi.monthPillar.displayName}',
-                  'Day Master: ${synthesis.bazi.dayMaster}',
+                  'Core Day Element (Day Master): ${synthesis.bazi.dayMaster}',
                   'Hour Pillar: ${synthesis.bazi.hourPillar.displayName}',
                 ]),
                 _buildCultureCard(synthesis.ziwei, [
-                  'Life Palace: ${synthesis.ziwei.lifePalaceBranch}',
-                  'Major Star: ${synthesis.ziwei.dominantArchetype}',
-                  'Auspicious Palaces: ${synthesis.ziwei.favorablePalaces.join(', ')}',
+                  'Life Palace (Ming Gong): ${synthesis.ziwei.lifePalaceBranch}',
+                  'Dominant Star Archetype: ${synthesis.ziwei.dominantArchetype}',
+                  'Key Auspicious Palaces: ${synthesis.ziwei.favorablePalaces.join(', ')}',
                 ]),
                 _buildCultureCard(synthesis.vedic, [
                   'Sidereal Sign: ${synthesis.vedic.signName}',
-                  'Nakshatra: ${synthesis.vedic.nakshatra} (${synthesis.vedic.nakshatraDeity})',
-                  'Vimshottari Dasha Lord: ${synthesis.vedic.dashaLord}',
-                  'Lahiri Ayanamsa: ${synthesis.vedic.ayanamsaDegrees}°',
+                  'Birth Lunar Mansion (Nakshatra): ${synthesis.vedic.nakshatra} (${synthesis.vedic.nakshatraDeity})',
+                  'Planetary Period Ruler (Dasha Lord): ${synthesis.vedic.dashaLord}',
+                  'Sidereal Equinox Correction (Lahiri): ${synthesis.vedic.ayanamsaDegrees}°',
                 ]),
                 _buildCultureCard(synthesis.nadi, [
-                  'Destiny Kaanda: ${synthesis.nadi.lifeChapterTitle}',
-                  'Karmic Archetype: ${synthesis.nadi.karmicArchetype}',
-                  'Sacred Remedy: ${synthesis.nadi.remedialMantra}',
+                  'Destiny Chapter (Kaanda): ${synthesis.nadi.lifeChapterTitle}',
+                  'Soul Purpose Archetype: ${synthesis.nadi.karmicArchetype}',
+                  'Sacred Remedy / Practice: ${synthesis.nadi.remedialMantra}',
                 ]),
                 _buildCultureCard(synthesis.mayan, [
-                  'Kin Number: Kin ${synthesis.mayan.kinNumber} (1-260)',
-                  'Galactic Tone: Tone ${synthesis.mayan.tone} of 13',
-                  'Solar Seal / Nahual: ${synthesis.mayan.nahualName}',
-                  'Sacred Direction: ${synthesis.mayan.sacredDirection}',
+                  'Sacred Kin Number: Kin ${synthesis.mayan.kinNumber} of 260',
+                  'Galactic Creative Tone: Tone ${synthesis.mayan.tone} of 13',
+                  'Day Sign / Solar Seal (Nahual): ${synthesis.mayan.nahualName}',
+                  'Sacred Compass Direction: ${synthesis.mayan.sacredDirection}',
                 ]),
                 _buildCultureCard(synthesis.aztec, [
-                  'Tonalpohualli Sign: ${synthesis.aztec.trecenaSign}',
-                  'Cardinal Lord: ${synthesis.aztec.cardinalLord}',
-                  'Patron Deity: ${synthesis.aztec.rulingForce}',
+                  'Tonalpohualli Sacred Sign: ${synthesis.aztec.trecenaSign}',
+                  'Cardinal Direction Guardian: ${synthesis.aztec.cardinalLord}',
+                  'Patron Natural Force: ${synthesis.aztec.rulingForce}',
                 ]),
                 _buildCultureCard(synthesis.medicineWheel, [
-                  'Totem Animal: ${synthesis.medicineWheel.signName}',
+                  'Earth Totem Animal: ${synthesis.medicineWheel.signName}',
                   'Elemental Clan: ${synthesis.medicineWheel.elementalClan}',
-                  'Plant Totem: ${synthesis.medicineWheel.plantTotem}',
-                  'Mineral Totem: ${synthesis.medicineWheel.mineralTotem}',
+                  'Botanical Ally (Plant Totem): ${synthesis.medicineWheel.plantTotem}',
+                  'Earth Mineral Totem: ${synthesis.medicineWheel.mineralTotem}',
                 ]),
                 _buildCultureCard(synthesis.celticTree, [
-                  'Sacred Tree: ${synthesis.celticTree.signName}',
-                  'Ogham Stave: ${synthesis.celticTree.oghamLetter}',
-                  'Animal Familiar: ${synthesis.celticTree.animalGuide}',
-                  'Lunar Period: ${synthesis.celticTree.lunarPeriod}',
+                  'Sacred Tree Sign: ${synthesis.celticTree.signName}',
+                  'Ancient Ogham Inscription: ${synthesis.celticTree.oghamLetter}',
+                  'Celtic Animal Guide: ${synthesis.celticTree.animalGuide}',
+                  'Lunar Season: ${synthesis.celticTree.lunarPeriod}',
                 ]),
                 _buildCultureCard(synthesis.norseRune, [
                   'Birth Sun Rune: ${synthesis.norseRune.signName}',
-                  'Hour Rune: ${synthesis.norseRune.hourRuneName} (${synthesis.norseRune.hourRuneSymbol})',
-                  'Aett Clan: ${synthesis.norseRune.aettGroup}',
+                  'Birth Hour Rune: ${synthesis.norseRune.hourRuneName} (${synthesis.norseRune.hourRuneSymbol})',
+                  'Elder Futhark Clan: ${synthesis.norseRune.aettGroup}',
                 ]),
                 _buildCultureCard(synthesis.bloodType, [
                   'Blood Type Archetype: ${synthesis.bloodType.signName}',
-                  'Workplace Role: ${synthesis.bloodType.idealWorkplaceRole}',
-                  'Social Synergy: ${synthesis.bloodType.compatibility}',
+                  'Natural Workplace Strengths: ${synthesis.bloodType.idealWorkplaceRole}',
+                  'Interpersonal Compatibility: ${synthesis.bloodType.compatibility}',
                 ]),
                 _buildCultureCard(synthesis.arabian, [
-                  'Part of Fortune: ${synthesis.arabian.lotOfFortuneDegree}',
-                  'Planetary Hour: ${synthesis.arabian.birthPlanetaryHour}',
-                  'Golden Window: ${synthesis.arabian.auspiciousWindow}',
+                  'Lot of Fortune: ${synthesis.arabian.lotOfFortuneDegree}',
+                  'Planetary Hour at Birth: ${synthesis.arabian.birthPlanetaryHour}',
+                  'Auspicious Daily Window: ${synthesis.arabian.auspiciousWindow}',
                 ]),
                 const SizedBox(height: 40),
               ]),
@@ -193,7 +223,7 @@ class ProfileScreen extends StatelessWidget {
 
   Widget _buildArchetypeHero(CosmicSynthesis synthesis) {
     return GlassCard(
-      backgroundColor: const Color(0xFF161938).withValues(alpha: 0.9),
+      backgroundColor: const Color(0xFF131B32).withValues(alpha: 0.92),
       borderColor: const Color(0xFFFFD700).withValues(alpha: 0.4),
       borderRadius: 24,
       padding: const EdgeInsets.all(22),
@@ -217,8 +247,8 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'Born ${synthesis.profile.birthDate.year}/${synthesis.profile.birthDate.month}/${synthesis.profile.birthDate.day} • ${synthesis.profile.cityName}',
-                      style: TextStyle(fontSize: 12, color: Colors.white.withValues(alpha: 0.6)),
+                      'Born ${synthesis.profile.birthDate.year}/${synthesis.profile.birthDate.month.toString().padLeft(2, '0')}/${synthesis.profile.birthDate.day.toString().padLeft(2, '0')} • ${synthesis.profile.cityName}',
+                      style: TextStyle(fontSize: 12.5, color: Colors.white.withValues(alpha: 0.65)),
                     ),
                   ],
                 ),
@@ -230,7 +260,7 @@ class ProfileScreen extends StatelessWidget {
                     colors: [Color(0xFF8E2DE2), Color(0xFF4A00E0)],
                   ),
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: const Color(0xFFFFD700)),
+                  border: Border.all(color: const Color(0xFFFFD700).withValues(alpha: 0.6)),
                 ),
                 child: Column(
                   children: [
@@ -243,8 +273,8 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'ALIGNMENT',
-                      style: GoogleFonts.outfit(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.white70),
+                      'HARMONY',
+                      style: GoogleFonts.outfit(fontSize: 9.5, fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                   ],
                 ),
@@ -257,16 +287,17 @@ class ProfileScreen extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: 0.06),
               borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
             ),
             child: Row(
               children: [
-                const Icon(Icons.shield_outlined, color: Color(0xFFFFD700), size: 20),
+                const Icon(Icons.stars_rounded, color: Color(0xFFFFD700), size: 20),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
                     synthesis.cosmicArchetypeTitle,
                     style: GoogleFonts.outfit(
-                      fontSize: 14,
+                      fontSize: 14.5,
                       fontWeight: FontWeight.bold,
                       color: const Color(0xFFFFD700),
                     ),
@@ -314,7 +345,7 @@ class ProfileScreen extends StatelessWidget {
                       Text(
                         chart.systemName.toUpperCase(),
                         style: GoogleFonts.outfit(
-                          fontSize: 10,
+                          fontSize: 10.5,
                           fontWeight: FontWeight.bold,
                           color: chart.accentColor,
                           letterSpacing: 1.5,
@@ -323,7 +354,7 @@ class ProfileScreen extends StatelessWidget {
                       Text(
                         chart.signName,
                         style: GoogleFonts.outfit(
-                          fontSize: 16,
+                          fontSize: 16.5,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
@@ -336,42 +367,53 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               chart.essence,
-              style: TextStyle(fontSize: 13, height: 1.4, color: Colors.white.withValues(alpha: 0.85)),
+              style: TextStyle(fontSize: 14, height: 1.5, color: Colors.white.withValues(alpha: 0.9)),
             ),
-            const SizedBox(height: 10),
-            ...keyPoints.map((point) {
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 4),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('• ', style: TextStyle(color: chart.accentColor, fontWeight: FontWeight.bold)),
-                    Expanded(
-                      child: Text(
-                        point,
-                        style: const TextStyle(fontSize: 12, color: Colors.white70),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             Container(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: BoxDecoration(
                 color: Colors.white.withValues(alpha: 0.04),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+              ),
+              child: Column(
+                children: keyPoints.map((point) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 3.5),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('• ', style: TextStyle(color: chart.accentColor, fontWeight: FontWeight.bold, fontSize: 14)),
+                        Expanded(
+                          child: Text(
+                            point,
+                            style: const TextStyle(fontSize: 13, color: Colors.white, height: 1.35),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+            const SizedBox(height: 10),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFD700).withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFFFFD700).withValues(alpha: 0.25)),
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.lightbulb_outline, size: 14, color: Color(0xFFFFD700)),
-                  const SizedBox(width: 6),
+                  const Icon(Icons.lightbulb_outline_rounded, size: 16, color: Color(0xFFFFD700)),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       chart.destinyAdvice,
-                      style: TextStyle(fontSize: 11, fontStyle: FontStyle.italic, color: Colors.white.withValues(alpha: 0.9)),
+                      style: const TextStyle(fontSize: 13, fontStyle: FontStyle.italic, color: Colors.white, height: 1.4),
                     ),
                   ),
                 ],

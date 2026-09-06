@@ -230,7 +230,7 @@ class CodexScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'TRADITIONS CODEX & CITATIONS',
+                    'TRADITIONS CODEX & SOURCES',
                     style: GoogleFonts.outfit(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
@@ -240,17 +240,17 @@ class CodexScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Global Astrological Compendium',
+                    'The 11 Global Astrological Traditions',
                     style: GoogleFonts.outfit(
-                      fontSize: 26,
+                      fontSize: 24,
                       fontWeight: FontWeight.w900,
                       color: Colors.white,
                     ),
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    'Historical foundations, mathematical cycles, and authoritative references for all 11 traditions',
-                    style: TextStyle(fontSize: 13, color: Colors.white.withValues(alpha: 0.7)),
+                    'Historical foundations, astronomical calculation methods, and authoritative references for each tradition.',
+                    style: TextStyle(fontSize: 13, color: Colors.white.withValues(alpha: 0.75), height: 1.4),
                   ),
                 ],
               ),
@@ -286,15 +286,15 @@ class CodexScreen extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  width: 46,
-                  height: 46,
+                  width: 48,
+                  height: 48,
                   decoration: BoxDecoration(
                     color: entry.color.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(color: entry.color.withValues(alpha: 0.5)),
                   ),
                   child: Center(
-                    child: Text(entry.icon, style: const TextStyle(fontSize: 22)),
+                    child: Text(entry.icon, style: const TextStyle(fontSize: 24)),
                   ),
                 ),
                 const SizedBox(width: 14),
@@ -310,69 +310,108 @@ class CodexScreen extends StatelessWidget {
                           color: Colors.white,
                         ),
                       ),
-                      Text(
-                        'Origin: ${entry.origin}',
-                        style: TextStyle(fontSize: 12, color: entry.color, fontWeight: FontWeight.w600),
+                      const SizedBox(height: 2),
+                      Row(
+                        children: [
+                          Icon(Icons.public_rounded, size: 13, color: entry.color),
+                          const SizedBox(width: 4),
+                          Expanded(
+                            child: Text(
+                              entry.origin,
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: entry.color,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 14),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.06),
-                borderRadius: BorderRadius.circular(8),
+                color: Colors.white.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
               ),
               child: Text(
-                'Basis: ${entry.primaryCycle}',
-                style: const TextStyle(fontSize: 11, color: Colors.white70, fontWeight: FontWeight.w500),
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              entry.description,
-              style: TextStyle(
-                fontSize: 13,
-                height: 1.45,
-                color: Colors.white.withValues(alpha: 0.85),
+                'Astronomical Cycle: ${entry.primaryCycle}',
+                style: const TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.w500),
               ),
             ),
             const SizedBox(height: 14),
             Text(
-              'ASTRONOMICAL & REFERENCE STANDARD',
-              style: GoogleFonts.outfit(fontSize: 10, fontWeight: FontWeight.bold, color: const Color(0xFFFFD700)),
+              entry.description,
+              style: TextStyle(
+                fontSize: 14,
+                height: 1.5,
+                color: Colors.white.withValues(alpha: 0.9),
+              ),
             ),
-            const SizedBox(height: 4),
-            Text(
-              entry.authorityStandard,
-              style: const TextStyle(fontSize: 12, color: Colors.white70),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              'AUTHORITATIVE ONLINE & ARCHIVAL SOURCES',
-              style: GoogleFonts.outfit(fontSize: 10, fontWeight: FontWeight.bold, color: const Color(0xFF00E5FF)),
-            ),
-            const SizedBox(height: 4),
-            ...entry.authoritativeResources.map((res) {
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 3),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('🔗 ', style: TextStyle(fontSize: 10)),
-                    Expanded(
-                      child: Text(
-                        res,
-                        style: const TextStyle(fontSize: 11, color: Colors.white60),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: Colors.black.withValues(alpha: 0.25),
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.verified_outlined, size: 14, color: Color(0xFFFFD700)),
+                      const SizedBox(width: 6),
+                      Text(
+                        'ASTRONOMICAL CALCULATION STANDARD',
+                        style: GoogleFonts.outfit(fontSize: 11, fontWeight: FontWeight.bold, color: const Color(0xFFFFD700), letterSpacing: 0.8),
                       ),
-                    ),
-                  ],
-                ),
-              );
-            }),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    entry.authorityStandard,
+                    style: const TextStyle(fontSize: 12.5, color: Colors.white, height: 1.35),
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      const Icon(Icons.menu_book_rounded, size: 14, color: Color(0xFF00E5FF)),
+                      const SizedBox(width: 6),
+                      Text(
+                        'AUTHORITATIVE SOURCES & ARCHIVES',
+                        style: GoogleFonts.outfit(fontSize: 11, fontWeight: FontWeight.bold, color: const Color(0xFF00E5FF), letterSpacing: 0.8),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  ...entry.authoritativeResources.map((res) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 5),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('• ', style: TextStyle(fontSize: 12, color: Color(0xFF00E5FF), fontWeight: FontWeight.bold)),
+                          Expanded(
+                            child: Text(
+                              res,
+                              style: TextStyle(fontSize: 12, color: Colors.white.withValues(alpha: 0.85)),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+                ],
+              ),
+            ),
           ],
         ),
       ),

@@ -33,6 +33,15 @@ class _TodayScreenState extends State<TodayScreen> {
   late List<DailyCulturalForecast> _dailyForecasts;
   late List<DailyConsensusPoint> _dailyConsensus;
 
+  static const List<String> _months = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+
+  static const List<String> _weekdays = [
+    'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -78,10 +87,99 @@ class _TodayScreenState extends State<TodayScreen> {
     );
   }
 
+  void _showTransitDetail(DailyCulturalForecast forecast) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) {
+        return Container(
+          constraints: const BoxConstraints(maxWidth: 600),
+          margin: const EdgeInsets.all(16),
+          child: GlassCard(
+            backgroundColor: const Color(0xFF0F172A).withValues(alpha: 0.96),
+            borderColor: forecast.accentColor.withValues(alpha: 0.5),
+            borderRadius: 24,
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: forecast.accentColor.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: forecast.accentColor.withValues(alpha: 0.4)),
+                      ),
+                      child: Text(
+                        forecast.traditionName,
+                        style: GoogleFonts.outfit(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: forecast.accentColor,
+                        ),
+                      ),
+                    ),
+                    Text(forecast.luckySymbol, style: const TextStyle(fontSize: 24)),
+                  ],
+                ),
+                const SizedBox(height: 14),
+                Text(
+                  forecast.headline,
+                  style: GoogleFonts.outfit(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.05),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+                  ),
+                  child: Text(
+                    forecast.guidance,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      height: 1.5,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      backgroundColor: Colors.white.withValues(alpha: 0.08),
+                    ),
+                    child: Text('Close', style: GoogleFonts.outfit(color: Colors.white, fontWeight: FontWeight.bold)),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
-    final dateStr = '${now.year}.${now.month.toString().padLeft(2, '0')}.${now.day.toString().padLeft(2, '0')}';
+    final weekday = _weekdays[now.weekday - 1];
+    final month = _months[now.month - 1];
+    final dateHuman = '$weekday, $month ${now.day}, ${now.year}';
     final userSignName = SignCalculator.getSign(widget.profile.birthDate.month, widget.profile.birthDate.day);
 
     return RefreshIndicator(
@@ -94,7 +192,7 @@ class _TodayScreenState extends State<TodayScreen> {
           // Header Area
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -110,17 +208,17 @@ class _TodayScreenState extends State<TodayScreen> {
                                 width: 8,
                                 height: 8,
                                 decoration: const BoxDecoration(
-                                  color: Color(0xFF00E5FF),
+                                  color: Color(0xFFFFD700),
                                   shape: BoxShape.circle,
                                 ),
-                              ).animate(onPlay: (c) => c.repeat(reverse: true)).scale(begin: const Offset(0.8, 0.8), end: const Offset(1.4, 1.4)),
+                              ).animate(onPlay: (c) => c.repeat(reverse: true)).scale(begin: const Offset(0.8, 0.8), end: const Offset(1.3, 1.3)),
                               const SizedBox(width: 8),
                               Text(
-                                'DAILY COSMIC ALIGNMENT',
+                                'DAILY COSMIC GUIDANCE',
                                 style: GoogleFonts.outfit(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w700,
-                                  color: const Color(0xFF00E5FF),
+                                  color: const Color(0xFFFFD700),
                                   letterSpacing: 2,
                                 ),
                               ),
@@ -128,12 +226,12 @@ class _TodayScreenState extends State<TodayScreen> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            dateStr,
+                            dateHuman,
                             style: GoogleFonts.outfit(
-                              fontSize: 28,
+                              fontSize: 22,
                               fontWeight: FontWeight.w900,
                               color: Colors.white,
-                              letterSpacing: -0.5,
+                              letterSpacing: -0.3,
                             ),
                           ),
                         ],
@@ -142,7 +240,7 @@ class _TodayScreenState extends State<TodayScreen> {
                         onTap: widget.onEditProfile,
                         borderRadius: BorderRadius.circular(16),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                           decoration: BoxDecoration(
                             color: Colors.white.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(16),
@@ -150,13 +248,13 @@ class _TodayScreenState extends State<TodayScreen> {
                           ),
                           child: Row(
                             children: [
-                              const Icon(Icons.person_outline, size: 16, color: Colors.white70),
+                              const Icon(Icons.person_rounded, size: 16, color: Color(0xFFFFD700)),
                               const SizedBox(width: 6),
                               Text(
                                 widget.profile.name,
                                 style: GoogleFonts.outfit(
                                   fontSize: 13,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                 ),
                               ),
@@ -220,13 +318,13 @@ class _TodayScreenState extends State<TodayScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
-                      colors: [Color(0xFF0F172A), Color(0xFF1E293B)],
+                      colors: [Color(0xFF0F1E36), Color(0xFF1E293B)],
                     ),
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: const Color(0xFF38BDF8).withValues(alpha: 0.5), width: 1.2),
+                    border: Border.all(color: const Color(0xFF38BDF8).withValues(alpha: 0.45), width: 1.2),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFF38BDF8).withValues(alpha: 0.15),
+                        color: const Color(0xFF38BDF8).withValues(alpha: 0.12),
                         blurRadius: 14,
                         offset: const Offset(0, 4),
                       ),
@@ -235,15 +333,15 @@ class _TodayScreenState extends State<TodayScreen> {
                   child: Row(
                     children: [
                       Container(
-                        width: 46,
-                        height: 46,
+                        width: 48,
+                        height: 48,
                         decoration: BoxDecoration(
                           color: const Color(0xFF38BDF8).withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(14),
                           border: Border.all(color: const Color(0xFF38BDF8)),
                         ),
                         child: const Center(
-                          child: Text('ᛟ', style: TextStyle(fontSize: 24, color: Color(0xFF38BDF8))),
+                          child: Text('ᛟ', style: TextStyle(fontSize: 26, color: Color(0xFF38BDF8))),
                         ),
                       ),
                       const SizedBox(width: 16),
@@ -259,9 +357,10 @@ class _TodayScreenState extends State<TodayScreen> {
                                 color: Colors.white,
                               ),
                             ),
+                            const SizedBox(height: 2),
                             Text(
-                              'Draw from the 24 Elder Futhark staves for divine guidance',
-                              style: TextStyle(fontSize: 12, color: Colors.white.withValues(alpha: 0.7)),
+                              'Draw from the 24 Elder Futhark runes for daily clarity',
+                              style: TextStyle(fontSize: 12.5, color: Colors.white.withValues(alpha: 0.75)),
                             ),
                           ],
                         ),
@@ -278,20 +377,30 @@ class _TodayScreenState extends State<TodayScreen> {
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 10),
-              child: Text(
-                'Cross-Cultural Daily Transits',
-                style: GoogleFonts.outfit(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Today’s Insights from Around the World',
+                    style: GoogleFonts.outfit(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    'Swipe horizontally to explore daily advice from Asian, Mayan, Vedic, and Nordic traditions',
+                    style: TextStyle(fontSize: 12.5, color: Colors.white.withValues(alpha: 0.7)),
+                  ),
+                ],
               ),
             ),
           ),
 
           SliverToBoxAdapter(
             child: SizedBox(
-              height: 185,
+              height: 220,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -299,11 +408,12 @@ class _TodayScreenState extends State<TodayScreen> {
                 itemBuilder: (context, index) {
                   final item = _dailyForecasts[index];
                   return Container(
-                    width: 280,
+                    width: 320,
                     margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
                     child: GlassCard(
+                      onTap: () => _showTransitDetail(item),
                       padding: const EdgeInsets.all(16),
-                      borderColor: item.accentColor.withValues(alpha: 0.4),
+                      borderColor: item.accentColor.withValues(alpha: 0.35),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -312,9 +422,9 @@ class _TodayScreenState extends State<TodayScreen> {
                             children: [
                               Expanded(
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                   decoration: BoxDecoration(
-                                    color: item.accentColor.withValues(alpha: 0.2),
+                                    color: item.accentColor.withValues(alpha: 0.18),
                                     borderRadius: BorderRadius.circular(8),
                                     border: Border.all(color: item.accentColor.withValues(alpha: 0.4)),
                                   ),
@@ -323,7 +433,7 @@ class _TodayScreenState extends State<TodayScreen> {
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: GoogleFonts.outfit(
-                                      fontSize: 11,
+                                      fontSize: 11.5,
                                       fontWeight: FontWeight.w600,
                                       color: item.accentColor,
                                     ),
@@ -340,7 +450,7 @@ class _TodayScreenState extends State<TodayScreen> {
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: GoogleFonts.outfit(
-                              fontSize: 14,
+                              fontSize: 14.5,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
@@ -349,13 +459,20 @@ class _TodayScreenState extends State<TodayScreen> {
                           Expanded(
                             child: Text(
                               item.guidance,
-                              maxLines: 3,
+                              maxLines: 4,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                fontSize: 12,
-                                height: 1.35,
-                                color: Colors.white.withValues(alpha: 0.8),
+                                fontSize: 12.5,
+                                height: 1.45,
+                                color: Colors.white.withValues(alpha: 0.88),
                               ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: Text(
+                              'Tap to read full advice →',
+                              style: TextStyle(fontSize: 11, color: item.accentColor.withValues(alpha: 0.9), fontWeight: FontWeight.w600),
                             ),
                           ),
                         ],
@@ -395,7 +512,7 @@ class _TodayScreenState extends State<TodayScreen> {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        'Tradition Overlaps Today',
+                        'Where World Cultures Agree Today',
                         style: GoogleFonts.outfit(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -406,8 +523,8 @@ class _TodayScreenState extends State<TodayScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Where independent ancient astrological cycles converge on today’s guidance',
-                    style: TextStyle(fontSize: 12, color: Colors.white.withValues(alpha: 0.6)),
+                    'When cultures from different parts of the world offer the same advice for your day',
+                    style: TextStyle(fontSize: 12.5, color: Colors.white.withValues(alpha: 0.7)),
                   ),
                 ],
               ),
@@ -442,9 +559,10 @@ class _TodayScreenState extends State<TodayScreen> {
                           color: Colors.white,
                         ),
                       ),
+                      const SizedBox(height: 2),
                       Text(
-                        'おはよう朝日です • Official 12-Sign Daily Fortune',
-                        style: TextStyle(fontSize: 12, color: Colors.white.withValues(alpha: 0.6)),
+                        'おはよう朝日です • Japan’s Official 12-Sign Daily Fortune',
+                        style: TextStyle(fontSize: 12.5, color: Colors.white.withValues(alpha: 0.65)),
                       ),
                     ],
                   ),
@@ -462,54 +580,54 @@ class _TodayScreenState extends State<TodayScreen> {
                   child: Center(
                     child: Padding(
                       padding: EdgeInsets.all(32.0),
-                    child: CircularProgressIndicator(color: Color(0xFFFFD700)),
-                  ),
-                ),
-              );
-            }
-
-            if (snapshot.hasError) {
-              return SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: GlassCard(
-                    child: Text(
-                      'Error loading horoscopes: ${snapshot.error}',
-                      style: const TextStyle(color: Colors.white70),
+                      child: CircularProgressIndicator(color: Color(0xFFFFD700)),
                     ),
                   ),
+                );
+              }
+
+              if (snapshot.hasError) {
+                return SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: GlassCard(
+                      child: Text(
+                        'Error loading horoscopes: ${snapshot.error}',
+                        style: const TextStyle(color: Colors.white70),
+                      ),
+                    ),
+                  ),
+                );
+              }
+
+              final list = snapshot.data ?? [];
+              return SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final item = list[index];
+                      return _buildOhaAsaItemCard(item);
+                    },
+                    childCount: list.length,
+                  ),
                 ),
               );
-            }
-
-            final list = snapshot.data ?? [];
-            return SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-              sliver: SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final item = list[index];
-                    return _buildOhaAsaItemCard(item);
-                  },
-                  childCount: list.length,
-                ),
-              ),
-            );
-          },
-        ),
-
-        // Prominent Cultural Heritage Disclaimer
-        const SliverToBoxAdapter(
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(20, 16, 20, 12),
-            child: CulturalDisclaimerCard(compact: false),
+            },
           ),
-        ),
 
-        const SliverToBoxAdapter(child: SizedBox(height: 40)),
-      ],
-    ),
-  );
+          // Prominent Cultural Heritage Disclaimer
+          const SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(20, 16, 20, 12),
+              child: CulturalDisclaimerCard(compact: false),
+            ),
+          ),
+
+          const SliverToBoxAdapter(child: SizedBox(height: 40)),
+        ],
+      ),
+    );
   }
 
   Widget _buildUserOhaAsaHeroCard(Horoscope h) {
@@ -518,8 +636,8 @@ class _TodayScreenState extends State<TodayScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       child: GlassCard(
-        backgroundColor: const Color(0xFF1E1B4B).withValues(alpha: 0.8),
-        borderColor: const Color(0xFFFFD700).withValues(alpha: 0.5),
+        backgroundColor: const Color(0xFF131B2F).withValues(alpha: 0.9),
+        borderColor: const Color(0xFFFFD700).withValues(alpha: 0.4),
         borderRadius: 24,
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -573,7 +691,7 @@ class _TodayScreenState extends State<TodayScreen> {
                         ),
                         Text(
                           'Your Morning TV Fortune',
-                          style: TextStyle(fontSize: 12, color: const Color(0xFFFFD700).withValues(alpha: 0.9)),
+                          style: TextStyle(fontSize: 12.5, color: const Color(0xFFFFD700).withValues(alpha: 0.95), fontWeight: FontWeight.w600),
                         ),
                       ],
                     ),
@@ -589,9 +707,9 @@ class _TodayScreenState extends State<TodayScreen> {
             Text(
               h.description,
               style: GoogleFonts.outfit(
-                fontSize: 14,
-                height: 1.4,
-                color: Colors.white.withValues(alpha: 0.95),
+                fontSize: 14.5,
+                height: 1.5,
+                color: Colors.white,
               ),
             ),
             const SizedBox(height: 16),
@@ -599,48 +717,58 @@ class _TodayScreenState extends State<TodayScreen> {
               children: [
                 Expanded(
                   child: Container(
-                    padding: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.08),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('LUCKY COLOR', style: GoogleFonts.outfit(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white60)),
-                        const SizedBox(height: 4),
+                        Text('LUCKY COLOR', style: GoogleFonts.outfit(fontSize: 10.5, fontWeight: FontWeight.bold, color: Colors.white70, letterSpacing: 0.8)),
+                        const SizedBox(height: 6),
                         Row(
                           children: [
-                            Container(width: 12, height: 12, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
-                            const SizedBox(width: 6),
-                            Flexible(child: Text(h.luckyColor, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.w600))),
+                            Container(width: 14, height: 14, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                h.luckyColor,
+                                style: const TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.w600),
+                              ),
+                            ),
                           ],
                         ),
                       ],
                     ),
                   ),
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Container(
-                    padding: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.08),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('LUCKY ITEM', style: GoogleFonts.outfit(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white60)),
-                        const SizedBox(height: 4),
-                        Text(h.luckyItem, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.w600)),
+                        Text('LUCKY ITEM', style: GoogleFonts.outfit(fontSize: 10.5, fontWeight: FontWeight.bold, color: Colors.white70, letterSpacing: 0.8)),
+                        const SizedBox(height: 6),
+                        Text(
+                          h.luckyItem,
+                          style: const TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.w600),
+                        ),
                       ],
                     ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: 16),
             LuckIndicatorBar(label: 'Money', score: h.moneyLuck, icon: Icons.attach_money_rounded, color: const Color(0xFFFFD700)),
             LuckIndicatorBar(label: 'Love', score: h.loveLuck, icon: Icons.favorite_rounded, color: const Color(0xFFFF4081)),
             LuckIndicatorBar(label: 'Work', score: h.workLuck, icon: Icons.work_outline_rounded, color: const Color(0xFF00E5FF)),
@@ -656,7 +784,7 @@ class _TodayScreenState extends State<TodayScreen> {
     final isTopThree = h.rank <= 3;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.only(bottom: 10),
       child: GlassCard(
         onTap: () => _openDetail(h),
         borderColor: isTopThree ? const Color(0xFFFFD700).withValues(alpha: 0.4) : null,
@@ -703,14 +831,14 @@ class _TodayScreenState extends State<TodayScreen> {
                       const SizedBox(width: 6),
                       Text(
                         h.signNameJapanese,
-                        style: TextStyle(fontSize: 12, color: Colors.white.withValues(alpha: 0.5)),
+                        style: TextStyle(fontSize: 12, color: Colors.white.withValues(alpha: 0.55)),
                       ),
                     ],
                   ),
                   const SizedBox(height: 2),
                   Text(
                     '${h.luckyColor} • ${h.luckyItem}',
-                    style: TextStyle(fontSize: 12, color: Colors.white.withValues(alpha: 0.7)),
+                    style: TextStyle(fontSize: 12.5, color: Colors.white.withValues(alpha: 0.75)),
                   ),
                 ],
               ),
@@ -753,7 +881,7 @@ class _TodayScreenState extends State<TodayScreen> {
                       Text(
                         point.domain.toUpperCase(),
                         style: GoogleFonts.outfit(
-                          fontSize: 10,
+                          fontSize: 10.5,
                           fontWeight: FontWeight.bold,
                           color: point.color,
                           letterSpacing: 1.1,
@@ -762,7 +890,7 @@ class _TodayScreenState extends State<TodayScreen> {
                       Text(
                         point.consensusTitle,
                         style: GoogleFonts.outfit(
-                          fontSize: 15,
+                          fontSize: 15.5,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
@@ -783,8 +911,8 @@ class _TodayScreenState extends State<TodayScreen> {
               child: Text(
                 point.synthesis,
                 style: const TextStyle(
-                  fontSize: 13,
-                  height: 1.45,
+                  fontSize: 13.5,
+                  height: 1.5,
                   color: Colors.white,
                 ),
               ),
@@ -793,9 +921,9 @@ class _TodayScreenState extends State<TodayScreen> {
             Text(
               'Converging Traditions:',
               style: TextStyle(
-                fontSize: 11,
+                fontSize: 11.5,
                 fontWeight: FontWeight.w600,
-                color: Colors.white.withValues(alpha: 0.6),
+                color: Colors.white.withValues(alpha: 0.65),
               ),
             ),
             const SizedBox(height: 6),
@@ -813,8 +941,8 @@ class _TodayScreenState extends State<TodayScreen> {
                   child: Text(
                     t,
                     style: TextStyle(
-                      fontSize: 11,
-                      color: Colors.white.withValues(alpha: 0.9),
+                      fontSize: 11.5,
+                      color: Colors.white.withValues(alpha: 0.95),
                     ),
                   ),
                 );
