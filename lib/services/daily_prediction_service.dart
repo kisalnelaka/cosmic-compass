@@ -149,7 +149,7 @@ class DailyPredictionService {
         synthesis:
             'Both Japanese morning TV fortune and Chinese BaZi Qi concur that your primary productivity channel peaks before late afternoon. Channel morning clarity into your most complex deliverable.',
         icon: '💼',
-        color: const Color(0xFF00E5FF),
+        color: const Color(0xFF1E40AF),
       ),
       DailyConsensusPoint(
         domain: 'Interpersonal & Communication Dynamics',
@@ -162,7 +162,7 @@ class DailyPredictionService {
         synthesis:
             'Japanese Blood Type guidance and Norse runic wisdom overlap on diplomacy today. State commitments clearly and avoid making assumptions in collaborative team settings.',
         icon: '🤝',
-        color: const Color(0xFFFFD700),
+        color: const Color(0xFFB45309),
       ),
       DailyConsensusPoint(
         domain: 'Vitality & Inner Equilibrium',
@@ -174,7 +174,7 @@ class DailyPredictionService {
         synthesis:
             'Vedic lunar transit and Oha Asa health indicators suggest reserving evening hours for screen-free renewal, quiet study, or spending quality time with loved ones.',
         icon: '🌿',
-        color: const Color(0xFF69F0AE),
+        color: const Color(0xFF15803D),
       ),
     ];
   }

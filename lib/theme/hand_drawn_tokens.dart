@@ -8,10 +8,12 @@ class HandDrawnTokens {
   // --- PALETTE ---
   static const Color warmPaper = Color(0xFFFDFBF7);
   static const Color cardWhite = Color(0xFFFFFFFF);
-  static const Color pencilBlack = Color(0xFF2D2D2D);
-  static const Color erasedPencil = Color(0xFFE5E0D8);
-  static const Color markerRed = Color(0xFFFF4D4D);
-  static const Color ballpointBlue = Color(0xFF2D5DA1);
+  static const Color pencilBlack = Color(0xFF22201D);
+  static const Color erasedPencil = Color(0xFF524E48); // High contrast dark graphite lead (WCAG AAA compliant)
+  static const Color faintPencil = Color(0xFF78726A);  // Medium graphite for placeholders/hints
+  static const Color emptySlot = Color(0xFFEFEBE4);    // Tint for unfilled gauge segments
+  static const Color markerRed = Color(0xFFD32F2F);
+  static const Color ballpointBlue = Color(0xFF1E40AF);
   static const Color postItYellow = Color(0xFFFFF9C4);
   static const Color highlighterGreen = Color(0xFFC8E6C9);
   static const Color highlighterPurple = Color(0xFFE1BEE7);

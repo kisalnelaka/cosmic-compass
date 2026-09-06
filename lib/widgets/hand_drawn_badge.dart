@@ -43,17 +43,17 @@ class HandDrawnBadge extends StatelessWidget {
     switch (effectiveStyle) {
       case HandDrawnBadgeStyle.stickyTag:
         bg = baseColor ?? HandDrawnTokens.postItYellow;
-        fg = textColor ?? HandDrawnTokens.pencilBlack;
         break;
       case HandDrawnBadgeStyle.outline:
         bg = baseColor ?? Colors.white;
-        fg = textColor ?? HandDrawnTokens.pencilBlack;
         break;
       case HandDrawnBadgeStyle.pill:
         bg = baseColor ?? HandDrawnTokens.warmPaper;
-        fg = textColor ?? HandDrawnTokens.pencilBlack;
         break;
     }
+
+    final lum = bg.computeLuminance();
+    fg = textColor ?? (lum > 0.45 ? HandDrawnTokens.pencilBlack : Colors.white);
 
     Widget badge = Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),

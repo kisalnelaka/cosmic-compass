@@ -475,7 +475,7 @@ class PartnerSynastryService {
         actionRecommendation:
             'When resolving disagreements, articulate emotional intent first before detailing tactical solutions. Give each other 2 minutes of uninterrupted speaking time.',
         icon: Icons.chat_bubble_outline,
-        color: const Color(0xFF38BDF8),
+        color: const Color(0xFF1E40AF),
       ),
       SynastryDomainAdvice(
         domain: 'Passion, Vitality & Chemistry',
@@ -484,7 +484,7 @@ class PartnerSynastryService {
         actionRecommendation:
             'Keep curiosity active through spontaneous shared novelty: try unfamiliar cuisines, travel to unmapped places, and champion each other\'s eccentric hobbies.',
         icon: Icons.favorite_border,
-        color: const Color(0xFFFF5252),
+        color: const Color(0xFFDC2626),
       ),
       SynastryDomainAdvice(
         domain: 'Long-term Synergy & Growth',
@@ -493,7 +493,7 @@ class PartnerSynastryService {
         actionRecommendation:
             'Establish shared seasonal milestones (financial, personal, spiritual). Revisit this cosmic consensus during solstice and equinox transitions.',
         icon: Icons.trending_up,
-        color: const Color(0xFFFFD700),
+        color: const Color(0xFFB45309),
       ),
     ];
   }

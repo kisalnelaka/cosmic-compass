@@ -45,7 +45,7 @@ class LuckIndicatorBar extends StatelessWidget {
                     height: 9,
                     margin: const EdgeInsets.symmetric(horizontal: 2),
                     decoration: BoxDecoration(
-                      color: isFilled ? color : HandDrawnTokens.erasedPencil,
+                      color: isFilled ? color : HandDrawnTokens.emptySlot,
                       borderRadius: BorderRadius.circular(2),
                       border: Border.all(
                         color: HandDrawnTokens.pencilBlack,
