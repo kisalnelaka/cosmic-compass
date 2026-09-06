@@ -96,7 +96,7 @@ The app adheres to recognized astronomical and archival standards:
 ### Local Development
 ```bash
 # 1. Clone repository
-git clone https://github.com/kisalnelaka/oha-asa-app.git
+git clone https://github.com/kisalnelaka/oha_asa_app.git
 cd oha_asa_app
 
 # 2. Fetch dependencies
@@ -123,7 +123,7 @@ The repository includes a ready-to-use GitHub Actions workflow (`.github/workflo
 3. Under **Build and deployment**, select **Deploy from a branch** and choose the `gh-pages` branch.
 4. Your application will automatically be live at:
    ```
-   https://<your-username>.github.io/oha_asa_app/
+   https://kisalnelaka.github.io/oha_asa_app/
    ```
 
 ### Manual Web Build
