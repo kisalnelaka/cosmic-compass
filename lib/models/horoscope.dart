@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class Horoscope {
   final String signName;
   final String signNameJapanese;

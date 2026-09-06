@@ -242,7 +242,6 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         }
 
-        final list = snapshot.data!;
         final horoscopes = snapshot.data!;
         
         // Update Widget if user sign is set

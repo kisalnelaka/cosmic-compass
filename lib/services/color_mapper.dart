@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 class ColorMapper {
+  static Color getColor(String name) => fromName(name);
+
   static Color fromName(String name) {
     final lowerName = name.toLowerCase();
-    
+
     final map = {
       'pink': Colors.pinkAccent,
       'red': Colors.redAccent,
@@ -29,7 +31,7 @@ class ColorMapper {
         return entry.value;
       }
     }
-    
+
     return Colors.white54; // Default
   }
 }
