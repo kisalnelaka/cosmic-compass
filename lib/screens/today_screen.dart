@@ -237,6 +237,25 @@ class _TodayScreenState extends State<TodayScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Container(
+                        width: 48,
+                        height: 48,
+                        margin: const EdgeInsets.only(right: 12),
+                        decoration: BoxDecoration(
+                          color: HandDrawnTokens.warmPaper,
+                          borderRadius: HandDrawnTokens.wobblySm,
+                          border: Border.all(color: HandDrawnTokens.pencilBlack, width: 2),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: HandDrawnTokens.pencilBlack,
+                              offset: Offset(2, 2),
+                              blurRadius: 0,
+                            ),
+                          ],
+                        ),
+                        clipBehavior: Clip.antiAlias,
+                        child: Image.asset('assets/logo.png', fit: BoxFit.cover),
+                      ),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
