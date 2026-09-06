@@ -1,5 +1,5 @@
-name: oha_asa_app
-description: "A new Flutter project."
+name: cosmic_compass
+description: "Handcrafted multi-cultural astrological field guide and Japanese Oha Asa daily horoscope companion built in Flutter."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev

@@ -41,7 +41,7 @@ jobs:
         run: flutter test
 
       - name: Build Web for GitHub Pages
-        run: flutter build web --release --base-href "/oha_asa_app/"
+        run: flutter build web --release --base-href "/cosmic-compass/"
 
       - name: Deploy to GitHub Pages (gh-pages branch)
         uses: peaceiris/actions-gh-pages@v4

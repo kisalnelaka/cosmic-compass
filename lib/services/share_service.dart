@@ -28,7 +28,7 @@ Luck Scores:
 • Work: ${horoscope.workLuck * 20}%
 • Health: ${horoscope.healthLuck * 20}%
 
-Read full multi-cultural insights at: https://kisalnelaka.github.io/oha_asa_app/
+Read full multi-cultural insights at: https://kisalnelaka.github.io/cosmic-compass/
 ''';
 
     await Clipboard.setData(ClipboardData(text: text.trim()));
@@ -64,7 +64,7 @@ ${synastry.executiveSummary}
 Tradition Highlights:
 ${synastry.traditionBreakdowns.map((t) => '• ${t.traditionName}: ${t.score}% (${t.harmonyLevel})').join('\n')}
 
-Explore full cross-cultural charts at: https://kisalnelaka.github.io/oha_asa_app/
+Explore full cross-cultural charts at: https://kisalnelaka.github.io/cosmic-compass/
 ''';
 
     await Clipboard.setData(ClipboardData(text: text.trim()));

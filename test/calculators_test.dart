@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:oha_asa_app/models/user_profile.dart';
-import 'package:oha_asa_app/services/profile_service.dart';
-import 'package:oha_asa_app/services/calculators/western_calculator.dart';
-import 'package:oha_asa_app/services/calculators/bazi_calculator.dart';
-import 'package:oha_asa_app/services/calculators/ziwei_calculator.dart';
-import 'package:oha_asa_app/services/calculators/vedic_calculator.dart';
-import 'package:oha_asa_app/services/calculators/nadi_calculator.dart';
-import 'package:oha_asa_app/services/calculators/mayan_calculator.dart';
-import 'package:oha_asa_app/services/calculators/aztec_calculator.dart';
-import 'package:oha_asa_app/services/calculators/medicine_wheel_calculator.dart';
-import 'package:oha_asa_app/services/calculators/celtic_tree_calculator.dart';
-import 'package:oha_asa_app/services/calculators/norse_rune_calculator.dart';
-import 'package:oha_asa_app/services/calculators/blood_type_calculator.dart';
-import 'package:oha_asa_app/services/calculators/arabian_parts_calculator.dart';
+import 'package:cosmic_compass/models/user_profile.dart';
+import 'package:cosmic_compass/services/profile_service.dart';
+import 'package:cosmic_compass/services/calculators/western_calculator.dart';
+import 'package:cosmic_compass/services/calculators/bazi_calculator.dart';
+import 'package:cosmic_compass/services/calculators/ziwei_calculator.dart';
+import 'package:cosmic_compass/services/calculators/vedic_calculator.dart';
+import 'package:cosmic_compass/services/calculators/nadi_calculator.dart';
+import 'package:cosmic_compass/services/calculators/mayan_calculator.dart';
+import 'package:cosmic_compass/services/calculators/aztec_calculator.dart';
+import 'package:cosmic_compass/services/calculators/medicine_wheel_calculator.dart';
+import 'package:cosmic_compass/services/calculators/celtic_tree_calculator.dart';
+import 'package:cosmic_compass/services/calculators/norse_rune_calculator.dart';
+import 'package:cosmic_compass/services/calculators/blood_type_calculator.dart';
+import 'package:cosmic_compass/services/calculators/arabian_parts_calculator.dart';
 
 void main() {
   group('Cross-Cultural Astrological Calculators Test Suite', () {

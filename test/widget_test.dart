@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:oha_asa_app/main.dart';
-import 'package:oha_asa_app/models/user_profile.dart';
-import 'package:oha_asa_app/services/partner_synastry_service.dart';
+import 'package:cosmic_compass/main.dart';
+import 'package:cosmic_compass/models/user_profile.dart';
+import 'package:cosmic_compass/services/partner_synastry_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {

@@ -102,8 +102,8 @@ The app adheres to recognized astronomical and archival standards:
 ### Local Development
 ```bash
 # 1. Clone repository
-git clone https://github.com/kisalnelaka/oha_asa_app.git
-cd oha_asa_app
+git clone https://github.com/kisalnelaka/cosmic-compass.git
+cd cosmic-compass
 
 # 2. Fetch dependencies
 flutter pub get
@@ -129,12 +129,12 @@ The repository includes a ready-to-use GitHub Actions workflow (`.github/workflo
 3. Under **Build and deployment**, select **Deploy from a branch** and choose the `gh-pages` branch.
 4. Your application will automatically be live at:
    ```
-   https://kisalnelaka.github.io/oha_asa_app/
+   https://kisalnelaka.github.io/cosmic-compass/
    ```
 
 ### Manual Web Build
 ```bash
-flutter build web --release --base-href "/oha_asa_app/"
+flutter build web --release --base-href "/cosmic-compass/"
 ```
 The production bundle is generated inside `build/web`.
 
