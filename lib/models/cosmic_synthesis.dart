@@ -38,6 +38,24 @@ class ElementalBalance {
   }
 }
 
+class TraditionConvergence {
+  final String title;
+  final String consensusTrait;
+  final List<String> agreeingTraditions;
+  final String analyticalSynthesis;
+  final int agreementPercentage; // 80 to 98%
+  final String icon;
+
+  const TraditionConvergence({
+    required this.title,
+    required this.consensusTrait,
+    required this.agreeingTraditions,
+    required this.analyticalSynthesis,
+    required this.agreementPercentage,
+    required this.icon,
+  });
+}
+
 class CosmicSynthesis {
   final UserProfile profile;
   final WesternChart western;
@@ -57,6 +75,7 @@ class CosmicSynthesis {
   final int cosmicSynergyScore; // 0 to 100
   final String universalMantra;
   final ElementalBalance elementalBalance;
+  final List<TraditionConvergence> convergences;
 
   const CosmicSynthesis({
     required this.profile,
@@ -76,6 +95,7 @@ class CosmicSynthesis {
     required this.cosmicSynergyScore,
     required this.universalMantra,
     required this.elementalBalance,
+    this.convergences = const [],
   });
 
   List<CulturalSign> get allSigns => [

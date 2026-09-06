@@ -18,6 +18,24 @@ class DailyCulturalForecast {
   });
 }
 
+class DailyConsensusPoint {
+  final String domain;
+  final String consensusTitle;
+  final List<String> convergingTraditions;
+  final String synthesis;
+  final String icon;
+  final Color color;
+
+  const DailyConsensusPoint({
+    required this.domain,
+    required this.consensusTitle,
+    required this.convergingTraditions,
+    required this.synthesis,
+    required this.icon,
+    required this.color,
+  });
+}
+
 class DailyPredictionService {
   static List<DailyCulturalForecast> generateDailyForecasts(UserProfile profile, DateTime today) {
     final daySeed = today.year * 10000 + today.month * 100 + today.day;
@@ -103,6 +121,61 @@ class DailyPredictionService {
       bloodForecast,
       runeForecast,
       arabianForecast,
+    ];
+  }
+
+  static List<DailyConsensusPoint> generateDailyConsensus(
+    UserProfile profile,
+    DateTime today, {
+    int userRank = 3,
+  }) {
+    final forecasts = generateDailyForecasts(profile, today);
+    final bazi = forecasts[0];
+    final mayan = forecasts[1];
+    final vedic = forecasts[2];
+    final blood = forecasts[3];
+    final rune = forecasts[4];
+    final arabian = forecasts[5];
+
+    return [
+      DailyConsensusPoint(
+        domain: 'Career & Productive Momentum',
+        consensusTitle: 'High Alignment on Focused Execution',
+        convergingTraditions: [
+          'Oha Asa: Daily Rank #$userRank favorable vector',
+          '${bazi.traditionName}: ${bazi.headline.split(':').last.trim()}',
+          '${arabian.traditionName}: ${arabian.headline.split(':').last.trim()}',
+        ],
+        synthesis:
+            'Both Japanese morning TV fortune and Chinese BaZi Qi concur that your primary productivity channel peaks before late afternoon. Channel morning clarity into your most complex deliverable.',
+        icon: '💼',
+        color: const Color(0xFF00E5FF),
+      ),
+      DailyConsensusPoint(
+        domain: 'Interpersonal & Communication Dynamics',
+        consensusTitle: 'Mutual Respect & Clear Boundaries',
+        convergingTraditions: [
+          '${blood.traditionName}: Type ${profile.bloodType.shortName} calibration',
+          '${rune.traditionName}: ${rune.headline.split('-').first.trim()}',
+          '${mayan.traditionName}: ${mayan.headline}',
+        ],
+        synthesis:
+            'Japanese Blood Type guidance and Norse runic wisdom overlap on diplomacy today. State commitments clearly and avoid making assumptions in collaborative team settings.',
+        icon: '🤝',
+        color: const Color(0xFFFFD700),
+      ),
+      DailyConsensusPoint(
+        domain: 'Vitality & Inner Equilibrium',
+        consensusTitle: 'Evening Recharging & Reflection',
+        convergingTraditions: [
+          '${vedic.traditionName}: ${vedic.headline.split('in').last.trim()}',
+          'Oha Asa: Daily Wellness & Rebalancing guidance',
+        ],
+        synthesis:
+            'Vedic lunar transit and Oha Asa health indicators suggest reserving evening hours for screen-free renewal, quiet study, or spending quality time with loved ones.',
+        icon: '🌿',
+        color: const Color(0xFF69F0AE),
+      ),
     ];
   }
 

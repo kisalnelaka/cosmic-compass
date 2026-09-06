@@ -9,6 +9,7 @@ import '../services/sign_calculator.dart';
 import '../services/color_mapper.dart';
 import '../widgets/glass_card.dart';
 import '../widgets/luck_indicator_bar.dart';
+import '../widgets/cultural_disclaimer_card.dart';
 import 'rune_cast_dialog.dart';
 import 'detail_dialog.dart';
 
@@ -30,6 +31,7 @@ class _TodayScreenState extends State<TodayScreen> {
   final HoroscopeService _horoscopeService = HoroscopeService();
   late Future<List<Horoscope>> _horoscopesFuture;
   late List<DailyCulturalForecast> _dailyForecasts;
+  late List<DailyConsensusPoint> _dailyConsensus;
 
   @override
   void initState() {
@@ -48,6 +50,11 @@ class _TodayScreenState extends State<TodayScreen> {
   void _loadData() {
     _horoscopesFuture = _horoscopeService.fetchHoroscopes();
     _dailyForecasts = DailyPredictionService.generateDailyForecasts(widget.profile, DateTime.now());
+    _dailyConsensus = DailyPredictionService.generateDailyConsensus(
+      widget.profile,
+      DateTime.now(),
+      userRank: 3,
+    );
   }
 
   Future<void> _refresh() async {
@@ -360,6 +367,63 @@ class _TodayScreenState extends State<TodayScreen> {
             ),
           ),
 
+          // Daily Cross-Cultural Consensus & Overlaps Section
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 24, 20, 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF00E5FF).withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: const Color(0xFF00E5FF).withValues(alpha: 0.4)),
+                        ),
+                        child: Text(
+                          'SYNCHRONICITY',
+                          style: GoogleFonts.outfit(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFF00E5FF),
+                            letterSpacing: 1.2,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Tradition Overlaps Today',
+                        style: GoogleFonts.outfit(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Where independent ancient astrological cycles converge on today’s guidance',
+                    style: TextStyle(fontSize: 12, color: Colors.white.withValues(alpha: 0.6)),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                final point = _dailyConsensus[index];
+                return _buildDailyConsensusCard(point);
+              },
+              childCount: _dailyConsensus.length,
+            ),
+          ),
+
           // Oha Asa TV Ranking Section Title
           SliverToBoxAdapter(
             child: Padding(
@@ -398,45 +462,54 @@ class _TodayScreenState extends State<TodayScreen> {
                   child: Center(
                     child: Padding(
                       padding: EdgeInsets.all(32.0),
-                      child: CircularProgressIndicator(color: Color(0xFFFFD700)),
-                    ),
-                  ),
-                );
-              }
-
-              if (snapshot.hasError) {
-                return SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: GlassCard(
-                      child: Text(
-                        'Error loading horoscopes: ${snapshot.error}',
-                        style: const TextStyle(color: Colors.white70),
-                      ),
-                    ),
-                  ),
-                );
-              }
-
-              final list = snapshot.data ?? [];
-              return SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final item = list[index];
-                      return _buildOhaAsaItemCard(item);
-                    },
-                    childCount: list.length,
+                    child: CircularProgressIndicator(color: Color(0xFFFFD700)),
                   ),
                 ),
               );
-            },
+            }
+
+            if (snapshot.hasError) {
+              return SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: GlassCard(
+                    child: Text(
+                      'Error loading horoscopes: ${snapshot.error}',
+                      style: const TextStyle(color: Colors.white70),
+                    ),
+                  ),
+                ),
+              );
+            }
+
+            final list = snapshot.data ?? [];
+            return SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    final item = list[index];
+                    return _buildOhaAsaItemCard(item);
+                  },
+                  childCount: list.length,
+                ),
+              ),
+            );
+          },
+        ),
+
+        // Prominent Cultural Heritage Disclaimer
+        const SliverToBoxAdapter(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(20, 16, 20, 12),
+            child: CulturalDisclaimerCard(compact: false),
           ),
-          const SliverToBoxAdapter(child: SizedBox(height: 40)),
-        ],
-      ),
-    );
+        ),
+
+        const SliverToBoxAdapter(child: SizedBox(height: 40)),
+      ],
+    ),
+  );
   }
 
   Widget _buildUserOhaAsaHeroCard(Horoscope h) {
@@ -653,6 +726,100 @@ class _TodayScreenState extends State<TodayScreen> {
             ),
             const SizedBox(width: 8),
             const Icon(Icons.chevron_right_rounded, color: Colors.white38, size: 18),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDailyConsensusCard(DailyConsensusPoint point) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+      child: GlassCard(
+        backgroundColor: const Color(0xFF131B2E).withValues(alpha: 0.8),
+        borderColor: point.color.withValues(alpha: 0.4),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text(point.icon, style: const TextStyle(fontSize: 22)),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        point.domain.toUpperCase(),
+                        style: GoogleFonts.outfit(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: point.color,
+                          letterSpacing: 1.1,
+                        ),
+                      ),
+                      Text(
+                        point.consensusTitle,
+                        style: GoogleFonts.outfit(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.04),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+              ),
+              child: Text(
+                point.synthesis,
+                style: const TextStyle(
+                  fontSize: 13,
+                  height: 1.45,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'Converging Traditions:',
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: Colors.white.withValues(alpha: 0.6),
+              ),
+            ),
+            const SizedBox(height: 6),
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: point.convergingTraditions.map((t) {
+                return Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: point.color.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: point.color.withValues(alpha: 0.3)),
+                  ),
+                  child: Text(
+                    t,
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Colors.white.withValues(alpha: 0.9),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
           ],
         ),
       ),

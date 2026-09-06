@@ -4,8 +4,10 @@ import '../models/user_profile.dart';
 import '../models/cosmic_synthesis.dart';
 import '../models/cultural_profiles.dart';
 import '../services/profile_service.dart';
+import '../services/daily_prediction_service.dart';
 import '../widgets/glass_card.dart';
 import '../widgets/elemental_radar_widget.dart';
+import '../widgets/cultural_disclaimer_card.dart';
 
 class ComparisonScreen extends StatefulWidget {
   final UserProfile profile;
@@ -18,6 +20,7 @@ class ComparisonScreen extends StatefulWidget {
 
 class _ComparisonScreenState extends State<ComparisonScreen> {
   String _selectedRegion = 'All';
+  int _currentViewMode = 0; // 0: Overlap & Concordance, 1: Full Comparison Matrix
 
   final List<String> _regions = [
     'All',
@@ -31,6 +34,10 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
   @override
   Widget build(BuildContext context) {
     final synthesis = ProfileService.synthesize(widget.profile);
+    final dailyConsensus = DailyPredictionService.generateDailyConsensus(
+      widget.profile,
+      DateTime.now(),
+    );
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -55,7 +62,7 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Comparative Matrix',
+                    'Where Traditions Converge',
                     style: GoogleFonts.outfit(
                       fontSize: 26,
                       fontWeight: FontWeight.w900,
@@ -64,7 +71,7 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    'How different civilizational cycles interpret your single cosmic imprint',
+                    'Comparing independent civilizational cycles to reveal where predictions overlap',
                     style: TextStyle(fontSize: 13, color: Colors.white.withValues(alpha: 0.7)),
                   ),
                 ],
@@ -72,55 +79,79 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
             ),
           ),
 
-          // Elemental Balance Card
-          SliverToBoxAdapter(
+          // Cultural Heritage & Pinch of Salt Disclaimer
+          const SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-              child: GlassCard(
-                padding: const EdgeInsets.all(20),
-                backgroundColor: const Color(0xFF13172E).withValues(alpha: 0.9),
-                child: ElementalRadarWidget(balance: synthesis.elementalBalance),
-              ),
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+              child: CulturalDisclaimerCard(compact: true),
             ),
           ),
 
-          // Cross-System Harmony Insights Card
+          // View Switcher (Concordance Overlaps vs Full Matrix)
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-              child: GlassCard(
-                backgroundColor: const Color(0xFF1E1436).withValues(alpha: 0.85),
-                borderColor: const Color(0xFFFF4081).withValues(alpha: 0.4),
-                padding: const EdgeInsets.all(18),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              padding: const EdgeInsets.fromLTRB(20, 14, 20, 10),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
+                ),
+                child: Row(
                   children: [
-                    Row(
-                      children: [
-                        const Icon(Icons.sync_alt_rounded, color: Color(0xFFFF4081)),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Cross-Cultural Harmony Synergy',
-                          style: GoogleFonts.outfit(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                    Expanded(
+                      child: InkWell(
+                        onTap: () => setState(() => _currentViewMode = 0),
+                        borderRadius: BorderRadius.circular(14),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          decoration: BoxDecoration(
+                            gradient: _currentViewMode == 0
+                                ? const LinearGradient(
+                                    colors: [Color(0xFF8E2DE2), Color(0xFF4A00E0)],
+                                  )
+                                : null,
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Concordance & Overlaps',
+                              style: GoogleFonts.outfit(
+                                fontSize: 13,
+                                fontWeight: _currentViewMode == 0 ? FontWeight.bold : FontWeight.w500,
+                                color: _currentViewMode == 0 ? Colors.white : Colors.white70,
+                              ),
+                            ),
                           ),
                         ),
-                      ],
+                      ),
                     ),
-                    const SizedBox(height: 10),
-                    _buildSynergyRow(
-                      'Solar & Lunar Alignment',
-                      'Western ${synthesis.western.signName} matches with Sidereal ${synthesis.vedic.signName} through the ${synthesis.vedic.ayanamsaDegrees}° Lahiri Ayanamsa precession.',
-                    ),
-                    _buildSynergyRow(
-                      'Elemental Clan & Five Elements',
-                      'Medicine Wheel ${synthesis.medicineWheel.elementalClan} clan resonates with Chinese BaZi ${synthesis.bazi.dayMaster} Day Master.',
-                    ),
-                    _buildSynergyRow(
-                      'Spiritual Archetype Bridge',
-                      'Mayan ${synthesis.mayan.nahualName} and Celtic Tree ${synthesis.celticTree.signName} share a common emphasis on visionary guidance and organic timing.',
+                    Expanded(
+                      child: InkWell(
+                        onTap: () => setState(() => _currentViewMode = 1),
+                        borderRadius: BorderRadius.circular(14),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          decoration: BoxDecoration(
+                            gradient: _currentViewMode == 1
+                                ? const LinearGradient(
+                                    colors: [Color(0xFF8E2DE2), Color(0xFF4A00E0)],
+                                  )
+                                : null,
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'All 11 Traditions Matrix',
+                              style: GoogleFonts.outfit(
+                                fontSize: 13,
+                                fontWeight: _currentViewMode == 1 ? FontWeight.bold : FontWeight.w500,
+                                color: _currentViewMode == 1 ? Colors.white : Colors.white70,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -128,81 +159,309 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
             ),
           ),
 
-          // Region Filter Chips
-          SliverToBoxAdapter(
-            child: SizedBox(
-              height: 50,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                itemCount: _regions.length,
-                itemBuilder: (context, index) {
-                  final reg = _regions[index];
-                  final isSelected = _selectedRegion == reg;
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: FilterChip(
-                      selected: isSelected,
-                      label: Text(
-                        reg,
-                        style: GoogleFonts.outfit(
-                          fontSize: 12,
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                          color: isSelected ? Colors.white : Colors.white70,
-                        ),
-                      ),
-                      backgroundColor: Colors.white.withValues(alpha: 0.06),
-                      selectedColor: const Color(0xFF6A11CB),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      side: BorderSide(
-                        color: isSelected ? const Color(0xFFFFD700) : Colors.white.withValues(alpha: 0.15),
-                      ),
-                      onSelected: (val) {
-                        setState(() => _selectedRegion = reg);
-                      },
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
+          if (_currentViewMode == 0) ...[
+            // OVERLAPS & CONCORDANCE VIEW
 
-          // Comparative Items List
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final filtered = _getFilteredSigns(synthesis);
-                  final item = filtered[index];
-                  return _buildComparisonItem(item);
-                },
-                childCount: _getFilteredSigns(synthesis).length,
+            // Elemental Balance
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                child: GlassCard(
+                  padding: const EdgeInsets.all(20),
+                  backgroundColor: const Color(0xFF13172E).withValues(alpha: 0.9),
+                  child: ElementalRadarWidget(balance: synthesis.elementalBalance),
+                ),
               ),
             ),
-          ),
+
+            // Overlap Points Header
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Cross-Cultural Core Overlaps',
+                      style: GoogleFonts.outfit(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFD700).withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: const Color(0xFFFFD700).withValues(alpha: 0.4)),
+                      ),
+                      child: Text(
+                        '${synthesis.convergences.length} Overlap Themes',
+                        style: GoogleFonts.outfit(fontSize: 11, fontWeight: FontWeight.bold, color: const Color(0xFFFFD700)),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            // Convergence Cards List
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    final conv = synthesis.convergences[index];
+                    return _buildConvergenceCard(conv);
+                  },
+                  childCount: synthesis.convergences.length,
+                ),
+              ),
+            ),
+
+            // Today's Prediction Overlaps Header
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
+                child: Text(
+                  'Today’s Prediction Overlaps',
+                  style: GoogleFonts.outfit(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+
+            // Daily Consensus Points
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    final pt = dailyConsensus[index];
+                    return _buildDailyConsensusCard(pt);
+                  },
+                  childCount: dailyConsensus.length,
+                ),
+              ),
+            ),
+          ] else ...[
+            // FULL 11 TRADITIONS COMPARATIVE MATRIX VIEW
+
+            // Region Filter Chips
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: 50,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                  itemCount: _regions.length,
+                  itemBuilder: (context, index) {
+                    final reg = _regions[index];
+                    final isSelected = _selectedRegion == reg;
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      child: FilterChip(
+                        selected: isSelected,
+                        label: Text(
+                          reg,
+                          style: GoogleFonts.outfit(
+                            fontSize: 12,
+                            fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                            color: isSelected ? Colors.white : Colors.white70,
+                          ),
+                        ),
+                        backgroundColor: Colors.white.withValues(alpha: 0.06),
+                        selectedColor: const Color(0xFF6A11CB),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        side: BorderSide(
+                          color: isSelected ? const Color(0xFFFFD700) : Colors.white.withValues(alpha: 0.15),
+                        ),
+                        onSelected: (val) {
+                          setState(() => _selectedRegion = reg);
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+
+            // Matrix List
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    final filtered = _getFilteredSigns(synthesis);
+                    final item = filtered[index];
+                    return _buildComparisonItem(item);
+                  },
+                  childCount: _getFilteredSigns(synthesis).length,
+                ),
+              ),
+            ),
+          ],
           const SliverToBoxAdapter(child: SizedBox(height: 40)),
         ],
       ),
     );
   }
 
-  Widget _buildSynergyRow(String title, String desc) {
+  Widget _buildConvergenceCard(TraditionConvergence conv) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.bold, color: const Color(0xFFFFD700)),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            desc,
-            style: TextStyle(fontSize: 12, height: 1.35, color: Colors.white.withValues(alpha: 0.8)),
-          ),
-        ],
+      padding: const EdgeInsets.only(bottom: 14),
+      child: GlassCard(
+        borderColor: const Color(0xFF9B51E0).withValues(alpha: 0.4),
+        padding: const EdgeInsets.all(18),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Text(conv.icon, style: const TextStyle(fontSize: 22)),
+                    const SizedBox(width: 10),
+                    Text(
+                      conv.title,
+                      style: GoogleFonts.outfit(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF00E5FF).withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: const Color(0xFF00E5FF).withValues(alpha: 0.4)),
+                  ),
+                  child: Text(
+                    '${conv.agreementPercentage}% Concordance',
+                    style: GoogleFonts.outfit(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF00E5FF),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'Consensus: ${conv.consensusTrait}',
+              style: GoogleFonts.outfit(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: const Color(0xFFFFD700),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.04),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'AGREEING TRADITIONS:',
+                    style: GoogleFonts.outfit(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white54),
+                  ),
+                  const SizedBox(height: 4),
+                  ...conv.agreeingTraditions.map((t) => Padding(
+                        padding: const EdgeInsets.only(bottom: 2),
+                        child: Text('• $t', style: const TextStyle(fontSize: 11, color: Colors.white70)),
+                      )),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              conv.analyticalSynthesis,
+              style: TextStyle(
+                fontSize: 12,
+                height: 1.4,
+                color: Colors.white.withValues(alpha: 0.85),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDailyConsensusCard(DailyConsensusPoint pt) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: GlassCard(
+        borderColor: pt.color.withValues(alpha: 0.35),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text(pt.icon, style: const TextStyle(fontSize: 20)),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        pt.domain.toUpperCase(),
+                        style: GoogleFonts.outfit(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: pt.color,
+                          letterSpacing: 1.2,
+                        ),
+                      ),
+                      Text(
+                        pt.consensusTitle,
+                        style: GoogleFonts.outfit(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              pt.synthesis,
+              style: TextStyle(fontSize: 12, height: 1.35, color: Colors.white.withValues(alpha: 0.85)),
+            ),
+            const SizedBox(height: 6),
+            Wrap(
+              spacing: 6,
+              runSpacing: 4,
+              children: pt.convergingTraditions
+                  .map((t) => Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.05),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(t, style: const TextStyle(fontSize: 10, color: Colors.white60)),
+                      ))
+                  .toList(),
+            ),
+          ],
+        ),
       ),
     );
   }
