@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../models/user_profile.dart';
 import '../models/cosmic_synthesis.dart';
 import '../models/cultural_profiles.dart';
 import '../services/profile_service.dart';
 import '../services/daily_prediction_service.dart';
 import '../services/partner_synastry_service.dart';
-import '../widgets/glass_card.dart';
+import '../services/share_service.dart';
+import '../theme/hand_drawn_tokens.dart';
+import '../widgets/hand_drawn_card.dart';
+import '../widgets/hand_drawn_button.dart';
+import '../widgets/hand_drawn_badge.dart';
 import '../widgets/elemental_radar_widget.dart';
 import '../widgets/cultural_disclaimer_card.dart';
 import 'partner_setup_dialog.dart';
@@ -68,6 +71,21 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
     );
   }
 
+  void _shareSynergyReport(PartnerCompatibilityResult synastry) {
+    ShareService.copySynastryToClipboard(synastry);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: HandDrawnTokens.pencilBlack,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: HandDrawnTokens.wobblySm),
+        content: Text(
+          'Partner synergy report copied to clipboard. Ready to share!',
+          style: HandDrawnTokens.bodyFont(color: HandDrawnTokens.warmPaper, fontSize: 14),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final synthesis = ProfileService.synthesize(widget.profile);
@@ -88,11 +106,11 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
               children: [
                 Text(
                   'CROSS-CULTURAL HARMONY',
-                  style: GoogleFonts.outfit(
-                    fontSize: 12,
+                  style: HandDrawnTokens.headingFont(
+                    fontSize: 12.5,
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFF00E5FF),
-                    letterSpacing: 2.5,
+                    color: HandDrawnTokens.markerRed,
+                    letterSpacing: 2.0,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -100,25 +118,29 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                   _currentViewMode == 2
                       ? 'Partner Synergy & Synastry'
                       : 'Where World Cultures Agree on You',
-                  style: GoogleFonts.outfit(
+                  style: HandDrawnTokens.headingFont(
                     fontSize: 24,
                     fontWeight: FontWeight.w900,
-                    color: Colors.white,
+                    color: HandDrawnTokens.pencilBlack,
                   ),
                 ),
                 const SizedBox(height: 6),
                 Text(
                   _currentViewMode == 2
-                      ? 'Synthesizing your birth profile with your partner across Western elements, Chinese BaZi trines, Japanese Ketsuekigata, Vedic Nakshatras, and Mayan Kin.'
+                      ? 'Synthesizing your birth profile with your partner across Western elements, Chinese BaZi trines, Japanese Blood Types, Vedic Nakshatras, and Mayan Kin.'
                       : 'Across thousands of years and continents, independent civilizations developed unique cosmic systems. Here is where they arrive at identical conclusions about your personality and strengths.',
-                  style: TextStyle(fontSize: 13, color: Colors.white.withValues(alpha: 0.75), height: 1.4),
+                  style: HandDrawnTokens.bodyFont(
+                    fontSize: 14,
+                    color: HandDrawnTokens.erasedPencil,
+                    height: 1.4,
+                  ),
                 ),
               ],
             ),
           ),
         ),
 
-        // Cultural Heritage & Pinch of Salt Disclaimer
+        // Cultural Heritage Disclaimer
         const SliverToBoxAdapter(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 6),
@@ -131,10 +153,12 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(20, 14, 20, 10),
             child: Container(
+              padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
+                color: HandDrawnTokens.warmPaper,
+                borderRadius: HandDrawnTokens.wobblySm,
+                border: Border.all(color: HandDrawnTokens.pencilBlack, width: 2),
+                boxShadow: HandDrawnTokens.hardShadowSm,
               ),
               child: Row(
                 children: [
@@ -154,9 +178,9 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-              child: GlassCard(
+              child: HandDrawnCard(
                 padding: const EdgeInsets.all(20),
-                backgroundColor: const Color(0xFF13172E).withValues(alpha: 0.9),
+                backgroundColor: HandDrawnTokens.cardWhite,
                 child: ElementalRadarWidget(balance: synthesis.elementalBalance),
               ),
             ),
@@ -175,36 +199,28 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                       children: [
                         Text(
                           'Core Trait Convergences',
-                          style: GoogleFonts.outfit(
-                            fontSize: 18,
+                          style: HandDrawnTokens.headingFont(
+                            fontSize: 19,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: HandDrawnTokens.pencilBlack,
                           ),
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          'Where at least 3 distinct world systems pinpoint the same trait',
-                          style: TextStyle(fontSize: 12.5, color: Colors.white.withValues(alpha: 0.7)),
+                          'Where at least 3 distinct world systems pinpoint the exact same trait',
+                          style: HandDrawnTokens.bodyFont(
+                            fontSize: 13.5,
+                            color: HandDrawnTokens.erasedPencil,
+                          ),
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(width: 12),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF00E5FF).withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: const Color(0xFF00E5FF).withValues(alpha: 0.4)),
-                    ),
-                    child: Text(
-                      '${synthesis.convergences.length} Overlaps',
-                      style: GoogleFonts.outfit(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF00E5FF),
-                      ),
-                    ),
+                  HandDrawnBadge(
+                    label: '${synthesis.convergences.length} Overlaps',
+                    color: HandDrawnTokens.ballpointBlue,
+                    isPostIt: false,
                   ),
                 ],
               ),
@@ -234,16 +250,19 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                 children: [
                   Text(
                     'Today’s Prediction Overlaps',
-                    style: GoogleFonts.outfit(
-                      fontSize: 18,
+                    style: HandDrawnTokens.headingFont(
+                      fontSize: 19,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: HandDrawnTokens.pencilBlack,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     'Points where independent daily astrological cycles harmonize for your specific chart',
-                    style: TextStyle(fontSize: 12.5, color: Colors.white.withValues(alpha: 0.7)),
+                    style: HandDrawnTokens.bodyFont(
+                      fontSize: 13.5,
+                      color: HandDrawnTokens.erasedPencil,
+                    ),
                   ),
                 ],
               ),
@@ -269,7 +288,7 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
           // Region Filter Chips
           SliverToBoxAdapter(
             child: SizedBox(
-              height: 50,
+              height: 52,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
@@ -279,25 +298,31 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                   final isSelected = _selectedRegion == reg;
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: FilterChip(
-                      selected: isSelected,
-                      label: Text(
-                        reg,
-                        style: GoogleFonts.outfit(
-                          fontSize: 12.5,
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                          color: isSelected ? Colors.black : Colors.white70,
+                    child: InkWell(
+                      onTap: () => setState(() => _selectedRegion = reg),
+                      borderRadius: HandDrawnTokens.wobblySm,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: isSelected ? HandDrawnTokens.postItYellow : HandDrawnTokens.cardWhite,
+                          borderRadius: HandDrawnTokens.wobblySm,
+                          border: Border.all(
+                            color: HandDrawnTokens.pencilBlack,
+                            width: isSelected ? 2.0 : 1.5,
+                          ),
+                          boxShadow: isSelected ? HandDrawnTokens.hardShadowSm : [],
+                        ),
+                        child: Center(
+                          child: Text(
+                            reg,
+                            style: HandDrawnTokens.bodyFont(
+                              fontSize: 13,
+                              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                              color: HandDrawnTokens.pencilBlack,
+                            ),
+                          ),
                         ),
                       ),
-                      backgroundColor: Colors.white.withValues(alpha: 0.06),
-                      selectedColor: const Color(0xFFFFD700),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      side: BorderSide(
-                        color: isSelected ? const Color(0xFFFFD700) : Colors.white.withValues(alpha: 0.15),
-                      ),
-                      onSelected: (val) {
-                        setState(() => _selectedRegion = reg);
-                      },
                     ),
                   );
                 },
@@ -322,11 +347,14 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
         ] else ...[
           // PARTNER SYNERGY VIEW
           if (_isLoadingPartner) ...[
-            const SliverToBoxAdapter(
+            SliverToBoxAdapter(
               child: Padding(
-                padding: EdgeInsets.all(40),
+                padding: const EdgeInsets.all(40),
                 child: Center(
-                  child: CircularProgressIndicator(color: Color(0xFFEC4899)),
+                  child: CircularProgressIndicator(
+                    color: HandDrawnTokens.markerRed,
+                    strokeWidth: 2.5,
+                  ),
                 ),
               ),
             ),
@@ -352,16 +380,15 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
     return Expanded(
       child: InkWell(
         onTap: () => setState(() => _currentViewMode = index),
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: HandDrawnTokens.wobblySm,
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 11),
+          padding: const EdgeInsets.symmetric(vertical: 9),
           decoration: BoxDecoration(
-            gradient: isSelected
-                ? (isSpecial
-                    ? const LinearGradient(colors: [Color(0xFFEC4899), Color(0xFF8B5CF6)])
-                    : const LinearGradient(colors: [Color(0xFFFFD700), Color(0xFFFFA000)]))
-                : null,
-            borderRadius: BorderRadius.circular(14),
+            color: isSelected
+                ? (isSpecial ? HandDrawnTokens.postItYellow : HandDrawnTokens.cardWhite)
+                : Colors.transparent,
+            borderRadius: HandDrawnTokens.wobblySm,
+            border: isSelected ? Border.all(color: HandDrawnTokens.pencilBlack, width: 2) : null,
           ),
           child: Center(
             child: Row(
@@ -371,18 +398,16 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                   Icon(
                     Icons.favorite,
                     size: 13,
-                    color: isSelected ? Colors.white : const Color(0xFFEC4899),
+                    color: HandDrawnTokens.markerRed,
                   ),
                   const SizedBox(width: 4),
                 ],
                 Text(
                   label,
-                  style: GoogleFonts.outfit(
-                    fontSize: 12,
+                  style: HandDrawnTokens.headingFont(
+                    fontSize: 13,
                     fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                    color: isSelected
-                        ? (isSpecial ? Colors.white : Colors.black)
-                        : Colors.white70,
+                    color: isSelected ? HandDrawnTokens.pencilBlack : HandDrawnTokens.erasedPencil,
                   ),
                 ),
               ],
@@ -396,9 +421,9 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
   Widget _buildEmptyPartnerView() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-      child: GlassCard(
-        backgroundColor: const Color(0xFF13172E).withValues(alpha: 0.9),
-        borderColor: const Color(0xFFEC4899).withValues(alpha: 0.4),
+      child: HandDrawnCard(
+        decoration: HandDrawnCardDecoration.pin,
+        backgroundColor: HandDrawnTokens.cardWhite,
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
@@ -406,79 +431,63 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                gradient: const LinearGradient(
-                  colors: [Color(0xFFEC4899), Color(0xFF8B5CF6)],
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFFEC4899).withValues(alpha: 0.35),
-                    blurRadius: 20,
-                    spreadRadius: 2,
-                  ),
-                ],
+                color: HandDrawnTokens.postItYellow,
+                border: Border.all(color: HandDrawnTokens.pencilBlack, width: 2),
+                boxShadow: HandDrawnTokens.hardShadowSm,
               ),
-              child: const Icon(Icons.favorite, color: Colors.white, size: 36),
+              child: Icon(Icons.favorite, color: HandDrawnTokens.markerRed, size: 36),
             ),
             const SizedBox(height: 16),
             Text(
               'Cross-Cultural Partner Synergy',
               textAlign: TextAlign.center,
-              style: GoogleFonts.outfit(
-                fontSize: 20,
+              style: HandDrawnTokens.headingFont(
+                fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: HandDrawnTokens.pencilBlack,
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              'Compare your chart with a partner, friend, or collaborator across 5 major world traditions: Western elemental harmony, Chinese BaZi trines & secret allies, Japanese blood type interpersonal matrix, Vedic nakshatra alignment, and Mayan galactic kin harmonics.',
+              'Compare your chart with a partner, friend, or collaborator across 5 major world traditions: Western elemental harmony, Chinese BaZi trines and secret allies, Japanese blood type interpersonal matrix, Vedic nakshatra alignment, and Mayan galactic kin harmonics.',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 13,
+              style: HandDrawnTokens.bodyFont(
+                fontSize: 14.5,
                 height: 1.5,
-                color: Colors.white.withValues(alpha: 0.8),
+                color: HandDrawnTokens.pencilBlack,
               ),
             ),
             const SizedBox(height: 20),
-            ElevatedButton.icon(
+            HandDrawnButton(
+              text: 'Add Partner Details',
+              variant: HandDrawnButtonVariant.primary,
+              icon: Icons.favorite_rounded,
               onPressed: _openPartnerDialog,
-              icon: const Icon(Icons.favorite_rounded, size: 18),
-              label: Text(
-                'Add Partner Details',
-                style: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 14),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFEC4899),
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                elevation: 4,
-              ),
             ),
             const SizedBox(height: 24),
             // Preview list of traditions evaluated
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.04),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+                color: HandDrawnTokens.warmPaper,
+                borderRadius: HandDrawnTokens.wobblySm,
+                border: Border.all(color: HandDrawnTokens.pencilBlack, width: 1.5),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'TRADITIONS EVALUATED IN SYNASTRY',
-                    style: GoogleFonts.outfit(
+                    style: HandDrawnTokens.headingFont(
                       fontSize: 11,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFFEC4899),
+                      color: HandDrawnTokens.markerRed,
                       letterSpacing: 1.5,
                     ),
                   ),
                   const SizedBox(height: 12),
                   _buildFeatureBullet('Western Tropical Zodiac', 'Elemental balance (Fire, Earth, Air, Water) and modal polarity.'),
-                  _buildFeatureBullet('Chinese BaZi & Earthly Branches', '3-Harmony Trines (San He), 6 Secret Friends (Liu He) & growth clashes.'),
+                  _buildFeatureBullet('Chinese BaZi & Earthly Branches', '3-Harmony Trines (San He), 6 Secret Friends (Liu He), and growth tensions.'),
                   _buildFeatureBullet('Japanese Blood Type (Ketsuekigata)', 'Empirical interpersonal compatibility matrix (A, B, AB, O).'),
                   _buildFeatureBullet('Vedic Jyotish & Nakshatras', 'Planetary lord friendships and lunar mansion dharmic alignment.'),
                   _buildFeatureBullet('Mayan Tzolk\'in Sacred Kin', 'Galactic tone resonance and sacred occult counterpart pairings.'),
@@ -497,17 +506,30 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.only(top: 4),
-            child: Icon(Icons.check_circle_outline, color: Color(0xFFEC4899), size: 14),
+          Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: Icon(Icons.check_circle_outline, color: HandDrawnTokens.markerRed, size: 16),
           ),
           const SizedBox(width: 8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600)),
-                Text(subtitle, style: TextStyle(color: Colors.white.withValues(alpha: 0.65), fontSize: 11.5)),
+                Text(
+                  title,
+                  style: HandDrawnTokens.headingFont(
+                    color: HandDrawnTokens.pencilBlack,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  subtitle,
+                  style: HandDrawnTokens.bodyFont(
+                    color: HandDrawnTokens.erasedPencil,
+                    fontSize: 13,
+                  ),
+                ),
               ],
             ),
           ),
@@ -526,9 +548,8 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Partner Header
-            GlassCard(
-              backgroundColor: const Color(0xFF13172E).withValues(alpha: 0.9),
-              borderColor: const Color(0xFFEC4899).withValues(alpha: 0.35),
+            HandDrawnCard(
+              backgroundColor: HandDrawnTokens.cardWhite,
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
@@ -536,18 +557,23 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.08),
-                        borderRadius: BorderRadius.circular(10),
+                        color: HandDrawnTokens.warmPaper,
+                        borderRadius: HandDrawnTokens.wobblySm,
+                        border: Border.all(color: HandDrawnTokens.pencilBlack, width: 1.5),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.person, size: 14, color: Color(0xFFFFD700)),
+                          Icon(Icons.person, size: 14, color: HandDrawnTokens.pencilBlack),
                           const SizedBox(width: 6),
                           Flexible(
                             child: Text(
                               widget.profile.name,
-                              style: GoogleFonts.outfit(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 13),
+                              style: HandDrawnTokens.headingFont(
+                                fontWeight: FontWeight.bold,
+                                color: HandDrawnTokens.pencilBlack,
+                                fontSize: 13,
+                              ),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
@@ -563,18 +589,23 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.08),
-                        borderRadius: BorderRadius.circular(10),
+                        color: HandDrawnTokens.postItYellow,
+                        borderRadius: HandDrawnTokens.wobblySm,
+                        border: Border.all(color: HandDrawnTokens.pencilBlack, width: 1.5),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.person_outline, size: 14, color: Color(0xFFEC4899)),
+                          Icon(Icons.favorite, size: 14, color: HandDrawnTokens.markerRed),
                           const SizedBox(width: 6),
                           Flexible(
                             child: Text(
                               _partnerProfile!.name,
-                              style: GoogleFonts.outfit(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 13),
+                              style: HandDrawnTokens.headingFont(
+                                fontWeight: FontWeight.bold,
+                                color: HandDrawnTokens.pencilBlack,
+                                fontSize: 13,
+                              ),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
@@ -583,15 +614,10 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  OutlinedButton.icon(
+                  HandDrawnButton(
+                    text: 'Edit',
+                    variant: HandDrawnButtonVariant.secondary,
                     onPressed: _openPartnerDialog,
-                    icon: const Icon(Icons.edit_outlined, size: 13, color: Color(0xFFEC4899)),
-                    label: Text('Edit', style: GoogleFonts.outfit(fontSize: 12, color: const Color(0xFFEC4899))),
-                    style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: Color(0xFFEC4899)),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                    ),
                   ),
                 ],
               ),
@@ -599,9 +625,9 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
             const SizedBox(height: 12),
 
             // Overall Synergy Gauge & Archetype Card
-            GlassCard(
-              backgroundColor: const Color(0xFF0F172A).withValues(alpha: 0.95),
-              borderColor: const Color(0xFFEC4899).withValues(alpha: 0.4),
+            HandDrawnCard(
+              decoration: HandDrawnCardDecoration.tape,
+              backgroundColor: HandDrawnTokens.postItYellow,
               padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -615,20 +641,20 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                           children: [
                             Text(
                               'OVERALL COSMIC SYNERGY',
-                              style: GoogleFonts.outfit(
+                              style: HandDrawnTokens.headingFont(
                                 fontSize: 11,
                                 fontWeight: FontWeight.bold,
-                                color: const Color(0xFFEC4899),
+                                color: HandDrawnTokens.markerRed,
                                 letterSpacing: 1.5,
                               ),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               '${synastry.overallScore}% Synergy',
-                              style: GoogleFonts.outfit(
+                              style: HandDrawnTokens.headingFont(
                                 fontSize: 28,
                                 fontWeight: FontWeight.w900,
-                                color: Colors.white,
+                                color: HandDrawnTokens.pencilBlack,
                               ),
                             ),
                           ],
@@ -636,29 +662,10 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                       ),
                       const SizedBox(width: 12),
                       Flexible(
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFFEC4899), Color(0xFF8B5CF6)],
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: const Color(0xFFEC4899).withValues(alpha: 0.3),
-                                blurRadius: 10,
-                              ),
-                            ],
-                          ),
-                          child: Text(
-                            synastry.relationshipArchetype,
-                            style: GoogleFonts.outfit(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                        child: HandDrawnBadge(
+                          label: synastry.relationshipArchetype,
+                          color: HandDrawnTokens.markerRed,
+                          isPostIt: false,
                         ),
                       ),
                     ],
@@ -666,23 +673,43 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                   const SizedBox(height: 12),
 
                   // Progress Bar
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: LinearProgressIndicator(
-                      value: synastry.overallScore / 100.0,
-                      minHeight: 8,
-                      backgroundColor: Colors.white.withValues(alpha: 0.1),
-                      valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFEC4899)),
+                  Container(
+                    height: 10,
+                    decoration: BoxDecoration(
+                      color: HandDrawnTokens.cardWhite,
+                      borderRadius: HandDrawnTokens.wobblySm,
+                      border: Border.all(color: HandDrawnTokens.pencilBlack, width: 2),
+                    ),
+                    alignment: Alignment.centerLeft,
+                    child: FractionallySizedBox(
+                      widthFactor: synastry.overallScore / 100.0,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: HandDrawnTokens.markerRed,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 14),
 
                   Text(
                     synastry.executiveSummary,
-                    style: TextStyle(
-                      fontSize: 13,
-                      height: 1.45,
-                      color: Colors.white.withValues(alpha: 0.9),
+                    style: HandDrawnTokens.bodyFont(
+                      fontSize: 14.5,
+                      height: 1.5,
+                      color: HandDrawnTokens.pencilBlack,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: HandDrawnButton(
+                      text: 'Share Synergy Report',
+                      icon: Icons.share_outlined,
+                      variant: HandDrawnButtonVariant.secondary,
+                      onPressed: () => _shareSynergyReport(synastry),
                     ),
                   ),
                 ],
@@ -693,16 +720,19 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
             // Tradition Synastry Breakdown Header
             Text(
               'Multi-Cultural Synastry Analysis',
-              style: GoogleFonts.outfit(
-                fontSize: 18,
+              style: HandDrawnTokens.headingFont(
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: HandDrawnTokens.pencilBlack,
               ),
             ),
             const SizedBox(height: 4),
             Text(
               'Detailed compatibility computed across 5 world cosmic frameworks',
-              style: TextStyle(fontSize: 12.5, color: Colors.white.withValues(alpha: 0.7)),
+              style: HandDrawnTokens.bodyFont(
+                fontSize: 14,
+                color: HandDrawnTokens.erasedPencil,
+              ),
             ),
             const SizedBox(height: 12),
 
@@ -714,16 +744,19 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
             // Deep Dynamic Guidance Domains Header
             Text(
               'Relationship Dynamics & Action Guidance',
-              style: GoogleFonts.outfit(
-                fontSize: 18,
+              style: HandDrawnTokens.headingFont(
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: HandDrawnTokens.pencilBlack,
               ),
             ),
             const SizedBox(height: 4),
             Text(
               'Practical recommendations derived from your astrological alignments',
-              style: TextStyle(fontSize: 12.5, color: Colors.white.withValues(alpha: 0.7)),
+              style: HandDrawnTokens.bodyFont(
+                fontSize: 14,
+                color: HandDrawnTokens.erasedPencil,
+              ),
             ),
             const SizedBox(height: 12),
 
@@ -738,41 +771,30 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
   Widget _buildTraditionSynastryCard(TraditionSynastry ts) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: GlassCard(
-        borderColor: ts.accentColor.withValues(alpha: 0.35),
+      child: HandDrawnCard(
+        backgroundColor: HandDrawnTokens.cardWhite,
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Icon(ts.icon, color: ts.accentColor, size: 18),
+                Icon(ts.icon, color: HandDrawnTokens.pencilBlack, size: 20),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     ts.traditionName,
-                    style: GoogleFonts.outfit(
-                      fontSize: 14,
+                    style: HandDrawnTokens.headingFont(
+                      fontSize: 15,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: HandDrawnTokens.pencilBlack,
                     ),
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: ts.accentColor.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: ts.accentColor.withValues(alpha: 0.4)),
-                  ),
-                  child: Text(
-                    '${ts.score}% • ${ts.harmonyLevel}',
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                      color: ts.accentColor,
-                    ),
-                  ),
+                HandDrawnBadge(
+                  label: '${ts.score}% • ${ts.harmonyLevel}',
+                  color: ts.accentColor,
+                  isPostIt: false,
                 ),
               ],
             ),
@@ -783,30 +805,32 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.05),
-                      borderRadius: BorderRadius.circular(8),
+                      color: HandDrawnTokens.warmPaper,
+                      borderRadius: HandDrawnTokens.wobblySm,
+                      border: Border.all(color: HandDrawnTokens.pencilBlack, width: 1.5),
                     ),
                     child: Text(
                       'You: ${ts.userSign}',
-                      style: const TextStyle(fontSize: 12, color: Colors.white70),
+                      style: HandDrawnTokens.bodyFont(fontSize: 13, color: HandDrawnTokens.pencilBlack),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 6),
-                  child: Icon(Icons.sync_alt, size: 14, color: Colors.white38),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                  child: Icon(Icons.sync_alt, size: 16, color: HandDrawnTokens.pencilBlack),
                 ),
                 Expanded(
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.05),
-                      borderRadius: BorderRadius.circular(8),
+                      color: HandDrawnTokens.warmPaper,
+                      borderRadius: HandDrawnTokens.wobblySm,
+                      border: Border.all(color: HandDrawnTokens.pencilBlack, width: 1.5),
                     ),
                     child: Text(
                       'Partner: ${ts.partnerSign}',
-                      style: const TextStyle(fontSize: 12, color: Colors.white70),
+                      style: HandDrawnTokens.bodyFont(fontSize: 13, color: HandDrawnTokens.pencilBlack),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -816,10 +840,10 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
             const SizedBox(height: 10),
             Text(
               ts.description,
-              style: TextStyle(
-                fontSize: 13,
+              style: HandDrawnTokens.bodyFont(
+                fontSize: 14,
                 height: 1.45,
-                color: Colors.white.withValues(alpha: 0.85),
+                color: HandDrawnTokens.pencilBlack,
               ),
             ),
           ],
@@ -831,22 +855,22 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
   Widget _buildDomainAdviceCard(SynastryDomainAdvice adv) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: GlassCard(
-        borderColor: adv.color.withValues(alpha: 0.3),
+      child: HandDrawnCard(
+        backgroundColor: HandDrawnTokens.cardWhite,
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Icon(adv.icon, color: adv.color, size: 18),
+                Icon(adv.icon, color: HandDrawnTokens.pencilBlack, size: 20),
                 const SizedBox(width: 8),
                 Text(
                   adv.domain.toUpperCase(),
-                  style: GoogleFonts.outfit(
-                    fontSize: 11,
+                  style: HandDrawnTokens.headingFont(
+                    fontSize: 12,
                     fontWeight: FontWeight.bold,
-                    color: adv.color,
+                    color: HandDrawnTokens.markerRed,
                     letterSpacing: 1.2,
                   ),
                 ),
@@ -855,10 +879,10 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
             const SizedBox(height: 8),
             Text(
               adv.dynamicSummary,
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
+              style: HandDrawnTokens.headingFont(
+                fontSize: 14.5,
+                fontWeight: FontWeight.bold,
+                color: HandDrawnTokens.pencilBlack,
                 height: 1.35,
               ),
             ),
@@ -866,25 +890,25 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.04),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+                color: HandDrawnTokens.warmPaper,
+                borderRadius: HandDrawnTokens.wobblySm,
+                border: Border.all(color: HandDrawnTokens.pencilBlack, width: 1.5),
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(top: 2),
-                    child: Icon(Icons.lightbulb_outline, size: 14, color: Color(0xFFFFD700)),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2),
+                    child: Icon(Icons.lightbulb_outline, size: 16, color: HandDrawnTokens.pencilBlack),
                   ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       adv.actionRecommendation,
-                      style: TextStyle(
-                        fontSize: 12,
+                      style: HandDrawnTokens.bodyFont(
+                        fontSize: 13.5,
                         height: 1.4,
-                        color: Colors.white.withValues(alpha: 0.85),
+                        color: HandDrawnTokens.pencilBlack,
                       ),
                     ),
                   ),
@@ -900,8 +924,8 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
   Widget _buildConvergenceCard(TraditionConvergence conv) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
-      child: GlassCard(
-        borderColor: const Color(0xFF9B51E0).withValues(alpha: 0.4),
+      child: HandDrawnCard(
+        backgroundColor: HandDrawnTokens.cardWhite,
         padding: const EdgeInsets.all(18),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -915,30 +939,19 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                     const SizedBox(width: 10),
                     Text(
                       conv.title.toUpperCase(),
-                      style: GoogleFonts.outfit(
-                        fontSize: 11,
+                      style: HandDrawnTokens.headingFont(
+                        fontSize: 12,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF00E5FF),
+                        color: HandDrawnTokens.markerRed,
                         letterSpacing: 1.5,
                       ),
                     ),
                   ],
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF00E5FF).withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: const Color(0xFF00E5FF).withValues(alpha: 0.4)),
-                  ),
-                  child: Text(
-                    '${conv.agreementPercentage}% Concordance',
-                    style: GoogleFonts.outfit(
-                      fontSize: 11.5,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFF00E5FF),
-                    ),
-                  ),
+                HandDrawnBadge(
+                  label: '${conv.agreementPercentage}% Concordance',
+                  color: HandDrawnTokens.ballpointBlue,
+                  isPostIt: false,
                 ),
               ],
             ),
@@ -946,16 +959,16 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
               decoration: BoxDecoration(
-                color: const Color(0xFFFFD700).withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: const Color(0xFFFFD700).withValues(alpha: 0.3)),
+                color: HandDrawnTokens.postItYellow,
+                borderRadius: HandDrawnTokens.wobblySm,
+                border: Border.all(color: HandDrawnTokens.pencilBlack, width: 1.5),
               ),
               child: Text(
                 'Consensus Insight: ${conv.consensusTrait}',
-                style: GoogleFonts.outfit(
-                  fontSize: 14,
+                style: HandDrawnTokens.headingFont(
+                  fontSize: 14.5,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFFFFD700),
+                  color: HandDrawnTokens.pencilBlack,
                 ),
               ),
             ),
@@ -963,16 +976,21 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.05),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+                color: HandDrawnTokens.warmPaper,
+                borderRadius: HandDrawnTokens.wobblySm,
+                border: Border.all(color: HandDrawnTokens.pencilBlack, width: 1.5),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'CONVERGING TRADITIONS',
-                    style: GoogleFonts.outfit(fontSize: 10.5, fontWeight: FontWeight.bold, color: Colors.white70, letterSpacing: 0.8),
+                    style: HandDrawnTokens.headingFont(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: HandDrawnTokens.erasedPencil,
+                      letterSpacing: 0.8,
+                    ),
                   ),
                   const SizedBox(height: 6),
                   ...conv.agreeingTraditions.map((t) => Padding(
@@ -980,8 +998,23 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('• ', style: TextStyle(color: Color(0xFF00E5FF), fontWeight: FontWeight.bold)),
-                            Expanded(child: Text(t, style: const TextStyle(fontSize: 13, color: Colors.white, height: 1.35))),
+                            Text(
+                              '• ',
+                              style: TextStyle(
+                                color: HandDrawnTokens.markerRed,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Expanded(
+                              child: Text(
+                                t,
+                                style: HandDrawnTokens.bodyFont(
+                                  fontSize: 13.5,
+                                  color: HandDrawnTokens.pencilBlack,
+                                  height: 1.35,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       )),
@@ -991,10 +1024,10 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
             const SizedBox(height: 12),
             Text(
               conv.analyticalSynthesis,
-              style: TextStyle(
-                fontSize: 13.5,
+              style: HandDrawnTokens.bodyFont(
+                fontSize: 14,
                 height: 1.5,
-                color: Colors.white.withValues(alpha: 0.95),
+                color: HandDrawnTokens.pencilBlack,
               ),
             ),
           ],
@@ -1006,8 +1039,8 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
   Widget _buildDailyConsensusCard(DailyConsensusPoint pt) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: GlassCard(
-        borderColor: pt.color.withValues(alpha: 0.35),
+      child: HandDrawnCard(
+        backgroundColor: HandDrawnTokens.cardWhite,
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1022,39 +1055,28 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                     children: [
                       Text(
                         pt.domain.toUpperCase(),
-                        style: GoogleFonts.outfit(
-                          fontSize: 10.5,
+                        style: HandDrawnTokens.headingFont(
+                          fontSize: 11,
                           fontWeight: FontWeight.bold,
-                          color: pt.color,
+                          color: HandDrawnTokens.markerRed,
                           letterSpacing: 1.2,
                         ),
                       ),
                       Text(
                         pt.consensusTitle,
-                        style: GoogleFonts.outfit(
-                          fontSize: 15,
+                        style: HandDrawnTokens.headingFont(
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: HandDrawnTokens.pencilBlack,
                         ),
                       ),
                     ],
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: pt.color.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: pt.color.withValues(alpha: 0.3)),
-                  ),
-                  child: Text(
-                    '${pt.convergingTraditions.length} Traditions Agree',
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                      color: pt.color,
-                    ),
-                  ),
+                HandDrawnBadge(
+                  label: '${pt.convergingTraditions.length} Traditions Agree',
+                  color: pt.color,
+                  isPostIt: false,
                 ),
               ],
             ),
@@ -1062,13 +1084,17 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.04),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+                color: HandDrawnTokens.warmPaper,
+                borderRadius: HandDrawnTokens.wobblySm,
+                border: Border.all(color: HandDrawnTokens.pencilBlack, width: 1.5),
               ),
               child: Text(
                 pt.synthesis,
-                style: const TextStyle(fontSize: 13.5, height: 1.45, color: Colors.white),
+                style: HandDrawnTokens.bodyFont(
+                  fontSize: 14,
+                  height: 1.45,
+                  color: HandDrawnTokens.pencilBlack,
+                ),
               ),
             ),
             const SizedBox(height: 10),
@@ -1076,14 +1102,10 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
               spacing: 6,
               runSpacing: 6,
               children: pt.convergingTraditions
-                  .map((t) => Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: pt.color.withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: pt.color.withValues(alpha: 0.25)),
-                        ),
-                        child: Text(t, style: TextStyle(fontSize: 11.5, color: Colors.white.withValues(alpha: 0.95))),
+                  .map((t) => HandDrawnBadge(
+                        label: t,
+                        color: pt.color,
+                        isPostIt: false,
                       ))
                   .toList(),
             ),
@@ -1096,8 +1118,8 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
   Widget _buildComparisonItem(CulturalSign sign) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: GlassCard(
-        borderColor: sign.accentColor.withValues(alpha: 0.3),
+      child: HandDrawnCard(
+        backgroundColor: HandDrawnTokens.cardWhite,
         padding: const EdgeInsets.all(16),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1107,8 +1129,8 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
               height: 44,
               decoration: BoxDecoration(
                 color: sign.accentColor.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: sign.accentColor.withValues(alpha: 0.5)),
+                borderRadius: HandDrawnTokens.wobblySm,
+                border: Border.all(color: HandDrawnTokens.pencilBlack, width: 2),
               ),
               child: Center(
                 child: Text(sign.symbol, style: const TextStyle(fontSize: 22)),
@@ -1124,22 +1146,27 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                     children: [
                       Text(
                         sign.systemName,
-                        style: GoogleFonts.outfit(
-                          fontSize: 11.5,
+                        style: HandDrawnTokens.headingFont(
+                          fontSize: 12,
                           fontWeight: FontWeight.bold,
-                          color: sign.accentColor,
+                          color: HandDrawnTokens.markerRed,
                           letterSpacing: 1,
                         ),
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2.5),
                         decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.08),
-                          borderRadius: BorderRadius.circular(6),
+                          color: HandDrawnTokens.warmPaper,
+                          borderRadius: HandDrawnTokens.wobblyBadge,
+                          border: Border.all(color: HandDrawnTokens.pencilBlack, width: 1.5),
                         ),
                         child: Text(
                           sign.element,
-                          style: const TextStyle(fontSize: 11, color: Colors.white, fontWeight: FontWeight.w600),
+                          style: HandDrawnTokens.bodyFont(
+                            fontSize: 12,
+                            color: HandDrawnTokens.pencilBlack,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ],
@@ -1147,19 +1174,19 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                   const SizedBox(height: 4),
                   Text(
                     sign.signName,
-                    style: GoogleFonts.outfit(
-                      fontSize: 16.5,
+                    style: HandDrawnTokens.headingFont(
+                      fontSize: 17,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: HandDrawnTokens.pencilBlack,
                     ),
                   ),
                   const SizedBox(height: 6),
                   Text(
                     sign.essence,
-                    style: TextStyle(
-                      fontSize: 13,
+                    style: HandDrawnTokens.bodyFont(
+                      fontSize: 13.5,
                       height: 1.45,
-                      color: Colors.white.withValues(alpha: 0.85),
+                      color: HandDrawnTokens.pencilBlack,
                     ),
                   ),
                 ],

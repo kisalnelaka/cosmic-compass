@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import '../widgets/glass_card.dart';
+import '../theme/hand_drawn_tokens.dart';
+import '../widgets/hand_drawn_card.dart';
 
 class CodexEntry {
   final String title;
@@ -33,8 +33,8 @@ class CodexScreen extends StatelessWidget {
       origin: 'Japan (Asahi Broadcasting Corporation)',
       primaryCycle: 'Daily 12-Western Signs Morning Ranking',
       description:
-          'Oha Asa (おはよう朝日です / Good Morning Morning) ranks the 12 signs daily based on TV Asahi astrologers. It provides concrete, actionable lucky items, colors, and 4 specific luck vectors (Money, Love, Work, Health) designed to proactively shift one’s daily fortune.',
-      authorityStandard: 'Live broadcast scraping & deterministic daily ephemeris algorithm.',
+          'Oha Asa (おはよう朝日です / Good Morning Morning) ranks the 12 signs daily based on TV Asahi astrologers. It provides concrete, actionable lucky items, colors, and 4 specific luck vectors (Money, Love, Work, Health) designed to proactively shift your daily fortune.',
+      authorityStandard: 'Live broadcast scraping and deterministic daily ephemeris algorithm.',
       authoritativeResources: [
         'TV Asahi Official Horoscope (tv-asahi.co.jp/goodmorning/uranai)',
         'ABC TV Japan (asahi.co.jp/ohaasa)',
@@ -49,7 +49,7 @@ class CodexScreen extends StatelessWidget {
       primaryCycle: 'Biological Antigen Typology (A, B, AB, O)',
       description:
           'In Japanese culture, blood type (Ketsuekigata) is deeply integrated into interpersonal psychology, daily compatibility, workplace dynamics, and matchmaking. Type A represents meticulous harmony, Type B dynamic passion, Type AB rational dualism, and Type O ambitious leadership.',
-      authorityStandard: 'Japan Blood Type Humanics Research Center & Nomi Toshitaka behavioral archives.',
+      authorityStandard: 'Japan Blood Type Humanics Research Center and Nomi Toshitaka behavioral archives.',
       authoritativeResources: [
         'Japan Blood Type Humanics Research Center (humanics.jp)',
         'Furukawa Takeji & Masahiko Nomi Research Papers',
@@ -63,11 +63,11 @@ class CodexScreen extends StatelessWidget {
       primaryCycle: 'Sexagenary (60-Year) Cycle & 24 Solar Terms (Jie Qi)',
       description:
           'BaZi translates your exact birth Year, Month, Day, and Hour into four pairs of Heavenly Stems and Earthly Branches, encompassing the 12 Zodiac animals, Yin/Yang polarities, and the Five Elements (Wood, Fire, Earth, Metal, Water).',
-      authorityStandard: 'Purple Mountain Observatory astronomical solar terms & HKO Lunar conversion.',
+      authorityStandard: 'Purple Mountain Observatory astronomical solar terms and HKO Lunar conversion.',
       authoritativeResources: [
         'Hong Kong Observatory Gregorian-Lunar Tables (hko.gov.hk)',
         'Purple Mountain Observatory (Chinese Academy of Sciences)',
-        'San Ming Tong Hui (《三命通会》) & Di Tian Sui Classical Texts',
+        'San Ming Tong Hui (《三命通会》) and Di Tian Sui Classical Texts',
       ],
       icon: '🐉',
       color: Color(0xFFE67E22),
@@ -92,7 +92,7 @@ class CodexScreen extends StatelessWidget {
       primaryCycle: 'Sidereal Zodiac & 27 Nakshatras (Lunar Mansions)',
       description:
           'Jyotish ("Science of Light") uses the fixed-star sidereal zodiac, adjusting for axial precession via the Lahiri Ayanamsa (~24° offset). It evaluates individual destiny, karma, and timing through the 27 Nakshatras and Vimshottari Dasha planetary periods.',
-      authorityStandard: 'Positional Astronomy Centre (Govt. of India) & NASA Swiss Ephemeris.',
+      authorityStandard: 'Positional Astronomy Centre (Govt. of India) and NASA Swiss Ephemeris.',
       authoritativeResources: [
         'Positional Astronomy Centre, India Meteorological Dept (posac.amssdelhi.gov.in)',
         'NASA Swiss Ephemeris / Astrodienst (astro.com/swisseph)',
@@ -110,7 +110,7 @@ class CodexScreen extends StatelessWidget {
       authorityStandard: 'Saraswathi Mahal Library Palm-Leaf Manuscripts (Thanjavur, Tamil Nadu).',
       authoritativeResources: [
         'Saraswathi Mahal Library Ancient Manuscript Archives',
-        'Agastya Samhita & Bhrigu Samhita Traditions',
+        'Agastya Samhita and Bhrigu Samhita Traditions',
       ],
       icon: '📜',
       color: Color(0xFFD4AF37),
@@ -121,7 +121,7 @@ class CodexScreen extends StatelessWidget {
       primaryCycle: 'Tropical Solar Ecliptic & 12 Sun Signs',
       description:
           'Based on the seasonal equinoxes and solstices, Western astrology tracks the Sun, Moon, and planetary archetypes across the 12 signs and 12 houses. It excels at psychological mapping, personality evolution, and transit timing.',
-      authorityStandard: 'NASA JPL Horizons Ephemeris & Claudius Ptolemy’s Tetrabiblos.',
+      authorityStandard: 'NASA JPL Horizons Ephemeris and Claudius Ptolemy’s Tetrabiblos.',
       authoritativeResources: [
         'NASA JPL Horizons Ephemeris System (ssd.jpl.nasa.gov/horizons)',
         'Astrodienst Ephemeris Archive (astro.com)',
@@ -136,7 +136,7 @@ class CodexScreen extends StatelessWidget {
       primaryCycle: 'Planetary Hours & Mathematical Lots (Parts)',
       description:
           'Persian and Arab scholars refined mathematical horoscopy, calculating Arabic Parts (such as the Part of Fortune: Ascendant + Moon - Sun) and Chaldean planetary hours to determine auspicious electional timing windows for high-stakes decisions.',
-      authorityStandard: 'Al-Biruni’s Kitab al-Tafhim & Warburg Institute Manuscripts.',
+      authorityStandard: 'Al-Biruni’s Kitab al-Tafhim and Warburg Institute Manuscripts.',
       authoritativeResources: [
         'Al-Biruni Institute of Oriental Studies Manuscripts',
         'Warburg Institute Classical Arabic Astrological Archives',
@@ -160,122 +160,127 @@ class CodexScreen extends StatelessWidget {
     ),
     CodexEntry(
       title: 'Aztec Tonalpohualli',
-      origin: 'Central Mexico (Nahua & Aztec Civilization)',
-      primaryCycle: '260-Day Sacred Calendar of 20 Trecenas',
+      origin: 'Central Mexico (Mexica Empire)',
+      primaryCycle: '260-Day Sacred Count (20 Trecenas of 13 Days)',
       description:
-          'The Tonalpohualli ("count of days") governed divination, ceremonies, and character. Each of the 20 day signs (Cipactli, Ehecatl, Calli, etc.) combines with numbers 1 to 13 to designate divine patron deities and cardinal directions.',
-      authorityStandard: 'Codex Borgia, Codex Borbonicus & INAH Archival Records.',
+          'The sacred Aztec calendar assigns each day a trecena sign governed by cardinal directions, primordial deities (such as Quetzalcoatl and Tezcatlipoca), and natural elemental forces, providing an energetic signature for fate, warfare, and spiritual leadership.',
+      authorityStandard: 'Codex Borgia, Codex Borbonicus, and Bernardino de Sahagún’s Florentine Codex.',
       authoritativeResources: [
-        'Instituto Nacional de Antropología e Historia (INAH Mexico)',
-        'Codex Borgia & Codex Fejérváry-Mayer Digital Archives',
+        'Vatican Library (Codex Borgia Digitized MSS)',
+        'National Institute of Anthropology and History (INAH Mexico)',
       ],
-      icon: '🐆',
-      color: Color(0xFFC0392B),
+      icon: '🦅',
+      color: Color(0xFFE74C3C),
     ),
     CodexEntry(
-      title: 'Medicine Wheel Earth Astrology',
-      origin: 'Indigenous North America',
-      primaryCycle: '12 Moons & 4 Elemental Clans Earth Wheel',
+      title: 'Native American Medicine Wheel',
+      origin: 'North America (Plains & Woodland Indigenous Peoples)',
+      primaryCycle: 'Four Directions & Lunar Moons',
       description:
-          'The Medicine Wheel connects human life cycles to the seasonal rhythms of Mother Earth. Each individual is assigned a Totem Animal, Elemental Clan (Thunderbird, Turtle, Butterfly, Frog), plant totem, and mineral totem reflecting earth-wisdom.',
-      authorityStandard: 'Sun Bear & Wabun Wind Earth Astrology records (Bear Tribe).',
+          'The Sacred Hoop / Medicine Wheel aligns the four directions (East, South, West, North) with seasonal life stages, animal totems, plant allies, and mineral spirits. Sun Bear’s contemporary synthesis maps the 12 moons to earth astrology.',
+      authorityStandard: 'Sun Bear (Chippewa) Bear Tribe Earth Astrology records.',
       authoritativeResources: [
-        'Smithsonian Center for Folklife and Cultural Heritage',
-        'The Medicine Wheel: Earth Astrology by Sun Bear & Wabun Wind',
+        'National Museum of the American Indian Historical Archives',
+        'Traditional Cultural Educators Council Repositories',
       ],
       icon: '🪶',
-      color: Color(0xFF795548),
+      color: Color(0xFF1ABC9C),
     ),
     CodexEntry(
-      title: 'Celtic Tree Astrology',
-      origin: 'Ancient British Isles & Gaul',
-      primaryCycle: '13 Lunar Sacred Tree Months & Ogham Alphabet',
+      title: 'Celtic Tree Astrology (Ogham)',
+      origin: 'Ancient Ireland, Scotland & Gaul (Druidic)',
+      primaryCycle: '13 Lunar Tree Months & Ogham Alphabet',
       description:
-          'Druidic astrology honors 13 sacred trees (Birch, Rowan, Oak, Reed, etc.) linked to lunar months. Each sign carries an Ogham alphabet letter, an animal guide, and ancient poetic attributes.',
-      authorityStandard: 'Book of Ballymote (Auraicept na n-Éces) & Royal Irish Academy.',
+          'Ancient Druids assigned sacred native trees (Birch, Rowan, Ash, Oak, Hazel, Elder, etc.) to 13 lunar cycles throughout the year. Each sacred tree embodies distinct magical virtues, animal guides, and primal earth energies.',
+      authorityStandard: 'Book of Ballymote (Ogham Tract) and Robert Graves’ White Goddess references.',
       authoritativeResources: [
-        'Royal Irish Academy (RIA) Celtic Manuscript Collections',
-        'Celtic Inscribed Stones Project (University of Glasgow)',
+        'Royal Irish Academy (RIA) Celtic Manuscripts',
+        'Trinity College Dublin Library Special Collections',
       ],
-      icon: '🌳',
-      color: Color(0xFF2E7D32),
+      icon: '🌿',
+      color: Color(0xFF2ECC71),
     ),
     CodexEntry(
-      title: 'Norse Runic Divination',
-      origin: 'Ancient Scandinavia & Germanic Tribes',
-      primaryCycle: '24 Elder Futhark Runes & Three Aettir',
+      title: 'Norse Rune Astrology',
+      origin: 'Scandinavia & Germanic Tribes (Viking Era)',
+      primaryCycle: '24 Elder Futhark Half-Months & Three Aetts',
       description:
-          'Runes are sacred staves carved into wood and stone representing cosmic forces, gods (Odin, Thor, Freyr), and human lessons. Castings provide direct communion with Wyrd (destiny) and ancestral fortitude.',
-      authorityStandard: 'Scandinavian Runic-text Database (Rundata, Uppsala University).',
+          'The 24 runes of the Elder Futhark are grouped into three Aetts (Freyr, Heimdall, Tyr) and mapped to 24 half-month solar periods. Each rune represents a cosmic law, primal godforce, and energetic archetype for divination and daily guidance.',
+      authorityStandard: 'Kylver Stone & Vadstena Bracteate inscriptions, Icelandic Rune Poems.',
       authoritativeResources: [
-        'Arnamagnæan Manuscript Collection (University of Copenhagen)',
-        'Uppsala University Rundata Archaeological Inscriptions Database',
+        'National Historical Museum of Sweden (historiska.se)',
+        'Arnamagnæan Manuscript Collection (Copenhagen)',
       ],
-      icon: 'ᚠ',
-      color: Color(0xFF0284C7),
+      icon: 'ᛟ',
+      color: Color(0xFF34495E),
     ),
   ];
 
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
-        physics: const BouncingScrollPhysics(),
-        slivers: [
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'TRADITIONS CODEX & SOURCES',
-                    style: GoogleFonts.outfit(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFFFFD700),
-                      letterSpacing: 2.5,
-                    ),
+      physics: const BouncingScrollPhysics(),
+      slivers: [
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'RESEARCH & HERITAGE COMPENDIUM',
+                  style: HandDrawnTokens.headingFont(
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w700,
+                    color: HandDrawnTokens.markerRed,
+                    letterSpacing: 2.0,
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'The 11 Global Astrological Traditions',
-                    style: GoogleFonts.outfit(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white,
-                    ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'The World Traditions Codex',
+                  style: HandDrawnTokens.headingFont(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w900,
+                    color: HandDrawnTokens.pencilBlack,
                   ),
-                  const SizedBox(height: 6),
-                  Text(
-                    'Historical foundations, astronomical calculation methods, and authoritative references for each tradition.',
-                    style: TextStyle(fontSize: 13, color: Colors.white.withValues(alpha: 0.75), height: 1.4),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Historical foundations, astronomical calculation methods, and authoritative references for each tradition represented in this application.',
+                  style: HandDrawnTokens.bodyFont(
+                    fontSize: 14,
+                    color: HandDrawnTokens.erasedPencil,
+                    height: 1.4,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final entry = entries[index];
-                  return _buildCodexCard(entry);
-                },
-                childCount: entries.length,
-              ),
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+          sliver: SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                final entry = entries[index];
+                return _buildCodexCard(entry);
+              },
+              childCount: entries.length,
             ),
           ),
-          const SliverToBoxAdapter(child: SizedBox(height: 40)),
-        ],
-      );
+        ),
+        const SliverToBoxAdapter(child: SizedBox(height: 40)),
+      ],
+    );
   }
 
   Widget _buildCodexCard(CodexEntry entry) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
-      child: GlassCard(
-        borderColor: entry.color.withValues(alpha: 0.4),
+      child: HandDrawnCard(
+        decoration: HandDrawnCardDecoration.none,
+        backgroundColor: HandDrawnTokens.cardWhite,
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -287,8 +292,8 @@ class CodexScreen extends StatelessWidget {
                   height: 48,
                   decoration: BoxDecoration(
                     color: entry.color.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: entry.color.withValues(alpha: 0.5)),
+                    borderRadius: HandDrawnTokens.wobblySm,
+                    border: Border.all(color: HandDrawnTokens.pencilBlack, width: 2),
                   ),
                   child: Center(
                     child: Text(entry.icon, style: const TextStyle(fontSize: 24)),
@@ -301,24 +306,24 @@ class CodexScreen extends StatelessWidget {
                     children: [
                       Text(
                         entry.title,
-                        style: GoogleFonts.outfit(
+                        style: HandDrawnTokens.headingFont(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: HandDrawnTokens.pencilBlack,
                         ),
                       ),
                       const SizedBox(height: 2),
                       Row(
                         children: [
-                          Icon(Icons.public_rounded, size: 13, color: entry.color),
+                          Icon(Icons.public_rounded, size: 14, color: HandDrawnTokens.pencilBlack),
                           const SizedBox(width: 4),
                           Expanded(
                             child: Text(
                               entry.origin,
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: entry.color,
-                                fontWeight: FontWeight.w600,
+                              style: HandDrawnTokens.bodyFont(
+                                fontSize: 13.5,
+                                color: HandDrawnTokens.erasedPencil,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
@@ -333,58 +338,76 @@ class CodexScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                color: HandDrawnTokens.warmPaper,
+                borderRadius: HandDrawnTokens.wobblySm,
+                border: Border.all(color: HandDrawnTokens.pencilBlack, width: 1.5),
               ),
               child: Text(
                 'Astronomical Cycle: ${entry.primaryCycle}',
-                style: const TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.w500),
+                style: HandDrawnTokens.bodyFont(
+                  fontSize: 13,
+                  color: HandDrawnTokens.pencilBlack,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             const SizedBox(height: 14),
             Text(
               entry.description,
-              style: TextStyle(
-                fontSize: 14,
+              style: HandDrawnTokens.bodyFont(
+                fontSize: 14.5,
                 height: 1.5,
-                color: Colors.white.withValues(alpha: 0.9),
+                color: HandDrawnTokens.pencilBlack,
               ),
             ),
             const SizedBox(height: 16),
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.25),
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+                color: HandDrawnTokens.warmPaper,
+                borderRadius: HandDrawnTokens.wobblySm,
+                border: Border.all(color: HandDrawnTokens.pencilBlack, width: 1.5),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
-                      const Icon(Icons.verified_outlined, size: 14, color: Color(0xFFFFD700)),
+                      Icon(Icons.verified_outlined, size: 16, color: HandDrawnTokens.markerRed),
                       const SizedBox(width: 6),
                       Text(
                         'ASTRONOMICAL CALCULATION STANDARD',
-                        style: GoogleFonts.outfit(fontSize: 11, fontWeight: FontWeight.bold, color: const Color(0xFFFFD700), letterSpacing: 0.8),
+                        style: HandDrawnTokens.headingFont(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          color: HandDrawnTokens.markerRed,
+                          letterSpacing: 0.8,
+                        ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 6),
                   Text(
                     entry.authorityStandard,
-                    style: const TextStyle(fontSize: 12.5, color: Colors.white, height: 1.35),
+                    style: HandDrawnTokens.bodyFont(
+                      fontSize: 13.5,
+                      color: HandDrawnTokens.pencilBlack,
+                      height: 1.35,
+                    ),
                   ),
                   const SizedBox(height: 12),
                   Row(
                     children: [
-                      const Icon(Icons.menu_book_rounded, size: 14, color: Color(0xFF00E5FF)),
+                      Icon(Icons.menu_book_rounded, size: 16, color: HandDrawnTokens.ballpointBlue),
                       const SizedBox(width: 6),
                       Text(
                         'AUTHORITATIVE SOURCES & ARCHIVES',
-                        style: GoogleFonts.outfit(fontSize: 11, fontWeight: FontWeight.bold, color: const Color(0xFF00E5FF), letterSpacing: 0.8),
+                        style: HandDrawnTokens.headingFont(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          color: HandDrawnTokens.ballpointBlue,
+                          letterSpacing: 0.8,
+                        ),
                       ),
                     ],
                   ),
@@ -395,11 +418,21 @@ class CodexScreen extends StatelessWidget {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('• ', style: TextStyle(fontSize: 12, color: Color(0xFF00E5FF), fontWeight: FontWeight.bold)),
+                          Text(
+                            '• ',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: HandDrawnTokens.ballpointBlue,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                           Expanded(
                             child: Text(
                               res,
-                              style: TextStyle(fontSize: 12, color: Colors.white.withValues(alpha: 0.85)),
+                              style: HandDrawnTokens.bodyFont(
+                                fontSize: 13,
+                                color: HandDrawnTokens.pencilBlack,
+                              ),
                             ),
                           ),
                         ],

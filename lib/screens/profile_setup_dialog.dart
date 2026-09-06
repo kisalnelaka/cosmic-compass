@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../models/user_profile.dart';
-import '../widgets/glass_card.dart';
+import '../theme/hand_drawn_tokens.dart';
+import '../widgets/hand_drawn_card.dart';
+import '../widgets/hand_drawn_button.dart';
 
 class ProfileSetupDialog extends StatefulWidget {
   final UserProfile? initialProfile;
@@ -60,12 +61,12 @@ class _ProfileSetupDialogState extends State<ProfileSetupDialog> {
       lastDate: DateTime.now(),
       builder: (context, child) {
         return Theme(
-          data: ThemeData.dark().copyWith(
-            colorScheme: const ColorScheme.dark(
-              primary: Color(0xFFFFD700),
-              onPrimary: Colors.black,
-              surface: Color(0xFF131A2E),
-              onSurface: Colors.white,
+          data: ThemeData.light().copyWith(
+            colorScheme: ColorScheme.light(
+              primary: HandDrawnTokens.markerRed,
+              onPrimary: HandDrawnTokens.warmPaper,
+              surface: HandDrawnTokens.warmPaper,
+              onSurface: HandDrawnTokens.pencilBlack,
             ),
           ),
           child: child!,
@@ -83,12 +84,12 @@ class _ProfileSetupDialogState extends State<ProfileSetupDialog> {
       initialTime: _selectedTime,
       builder: (context, child) {
         return Theme(
-          data: ThemeData.dark().copyWith(
-            colorScheme: const ColorScheme.dark(
-              primary: Color(0xFFFFD700),
-              onPrimary: Colors.black,
-              surface: Color(0xFF131A2E),
-              onSurface: Colors.white,
+          data: ThemeData.light().copyWith(
+            colorScheme: ColorScheme.light(
+              primary: HandDrawnTokens.markerRed,
+              onPrimary: HandDrawnTokens.warmPaper,
+              surface: HandDrawnTokens.warmPaper,
+              onSurface: HandDrawnTokens.pencilBlack,
             ),
           ),
           child: child!,
@@ -123,322 +124,285 @@ class _ProfileSetupDialogState extends State<ProfileSetupDialog> {
       insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 480),
-        child: GlassCard(
-            backgroundColor: const Color(0xFF0F1629).withValues(alpha: 0.96),
-            borderColor: const Color(0xFFFFD700).withValues(alpha: 0.35),
-            borderRadius: 24,
-            padding: const EdgeInsets.all(24),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFFFFD700), Color(0xFFFFA000)],
-                          ),
-                        ),
-                        child: const Icon(Icons.auto_awesome, color: Colors.black, size: 22),
+        child: HandDrawnCard(
+          decoration: HandDrawnCardDecoration.tape,
+          backgroundColor: HandDrawnTokens.cardWhite,
+          padding: const EdgeInsets.all(24),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: HandDrawnTokens.postItYellow,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: HandDrawnTokens.pencilBlack, width: 2),
+                        boxShadow: HandDrawnTokens.hardShadowSm,
                       ),
-                      const SizedBox(width: 14),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              widget.isFirstTime ? 'Welcome to Cosmic Compass' : 'Your Birth Profile',
-                              style: GoogleFonts.outfit(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              widget.isFirstTime
-                                  ? 'Tell us your birth details once to unlock accurate signs across 11 world cultures.'
-                                  : 'Update your birth information anytime to recalculate your horoscopes.',
-                              style: TextStyle(fontSize: 12, color: Colors.white.withValues(alpha: 0.7)),
-                            ),
-                          ],
-                        ),
-                      ),
-                      if (!widget.isFirstTime)
-                        IconButton(
-                          icon: const Icon(Icons.close_rounded, color: Colors.white54, size: 20),
-                          onPressed: () => Navigator.of(context).pop(),
-                        ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Name Field
-                  Text(
-                    'Your Name or Nickname',
-                    style: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white),
-                  ),
-                  const SizedBox(height: 6),
-                  TextField(
-                    controller: _nameController,
-                    style: const TextStyle(color: Colors.white, fontSize: 14),
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.white.withValues(alpha: 0.07),
-                      hintText: 'e.g. Alex or Seeker',
-                      hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.35)),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.15)),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.15)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: const BorderSide(color: Color(0xFFFFD700), width: 1.5),
-                      ),
+                      child: Icon(Icons.auto_awesome, color: HandDrawnTokens.markerRed, size: 22),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Date & Time Row
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Birth Date',
-                              style: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white),
-                            ),
-                            const SizedBox(height: 6),
-                            InkWell(
-                              onTap: _pickDate,
-                              borderRadius: BorderRadius.circular(14),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.07),
-                                  borderRadius: BorderRadius.circular(14),
-                                  border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
-                                ),
-                                child: Row(
-                                  children: [
-                                    const Icon(Icons.calendar_today_rounded, size: 16, color: Color(0xFFFFD700)),
-                                    const SizedBox(width: 8),
-                                    Expanded(
-                                      child: Text(
-                                        '${_selectedDate.year}/${_selectedDate.month.toString().padLeft(2, '0')}/${_selectedDate.day.toString().padLeft(2, '0')}',
-                                        style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Birth Time',
-                              style: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white),
-                            ),
-                            const SizedBox(height: 6),
-                            InkWell(
-                              onTap: _pickTime,
-                              borderRadius: BorderRadius.circular(14),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.07),
-                                  borderRadius: BorderRadius.circular(14),
-                                  border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
-                                ),
-                                child: Row(
-                                  children: [
-                                    const Icon(Icons.access_time_rounded, size: 16, color: Color(0xFF00E5FF)),
-                                    const SizedBox(width: 8),
-                                    Expanded(
-                                      child: Text(
-                                        _selectedTime.format(context),
-                                        style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Birth time helps calculate your Rising Sign (Ascendant) and Chinese BaZi hour pillar.',
-                    style: TextStyle(fontSize: 11.5, color: Colors.white.withValues(alpha: 0.55)),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Japanese Blood Type Selector
-                  Text(
-                    'Blood Type (Japanese Ketsuekigata)',
-                    style: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Used in Japan for daily interpersonal compatibility and temperament advice.',
-                    style: TextStyle(fontSize: 11.5, color: Colors.white.withValues(alpha: 0.55)),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: BloodType.values.map((type) {
-                      final isSelected = _selectedBloodType == type;
-                      return Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 3),
-                          child: InkWell(
-                            onTap: () => setState(() => _selectedBloodType = type),
-                            borderRadius: BorderRadius.circular(12),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              decoration: BoxDecoration(
-                                gradient: isSelected
-                                    ? const LinearGradient(
-                                        colors: [Color(0xFFFFD700), Color(0xFFFFA000)],
-                                      )
-                                    : null,
-                                color: isSelected ? null : Colors.white.withValues(alpha: 0.07),
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: isSelected ? const Color(0xFFFFD700) : Colors.white.withValues(alpha: 0.15),
-                                  width: isSelected ? 1.5 : 1.0,
-                                ),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'Type ${type.shortName}',
-                                  style: GoogleFonts.outfit(
-                                    fontSize: 13,
-                                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                                    color: isSelected ? Colors.black : Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // City / Birthplace
-                  Text(
-                    'Birth City or Current Location',
-                    style: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white),
-                  ),
-                  const SizedBox(height: 6),
-                  TextField(
-                    controller: _cityController,
-                    style: const TextStyle(color: Colors.white, fontSize: 14),
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.white.withValues(alpha: 0.07),
-                      hintText: 'e.g. Tokyo, Colombo, London, New York',
-                      hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.35)),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.15)),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.15)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: const BorderSide(color: Color(0xFFFFD700), width: 1.5),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-
-                  // Save Button
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: _submit,
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                        backgroundColor: Colors.transparent,
-                        shadowColor: Colors.transparent,
-                      ),
-                      child: Ink(
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFFFFD700), Color(0xFFF59E0B), Color(0xFFD97706)],
-                          ),
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xFFFFD700).withValues(alpha: 0.35),
-                              blurRadius: 14,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: Container(
-                          alignment: Alignment.center,
-                          child: Text(
-                            'Calculate My Charts & Daily Horoscope',
-                            style: GoogleFonts.outfit(
-                              fontSize: 15.5,
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.isFirstTime ? 'Welcome to Your Cosmic Field Guide' : 'Edit Your Birth Profile',
+                            style: HandDrawnTokens.headingFont(
+                              fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                              letterSpacing: 0.3,
+                              color: HandDrawnTokens.pencilBlack,
                             ),
                           ),
-                        ),
+                          const SizedBox(height: 2),
+                          Text(
+                            widget.isFirstTime
+                                ? 'Add your birth details once to compute your charts across 11 world cultures.'
+                                : 'Update your birth information anytime to recalculate your horoscopes.',
+                            style: HandDrawnTokens.bodyFont(fontSize: 13, color: HandDrawnTokens.erasedPencil),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                  if (widget.isFirstTime) ...[
-                    const SizedBox(height: 10),
-                    Center(
-                      child: TextButton(
+                    if (!widget.isFirstTime)
+                      IconButton(
+                        icon: Icon(Icons.close_rounded, color: HandDrawnTokens.pencilBlack, size: 22),
                         onPressed: () => Navigator.of(context).pop(),
-                        child: Text(
-                          'Explore Default Charts First',
-                          style: GoogleFonts.outfit(
-                            fontSize: 13,
-                            color: Colors.white70,
-                            fontWeight: FontWeight.w500,
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+
+                // Name Field
+                Text(
+                  'Your Name or Nickname',
+                  style: HandDrawnTokens.headingFont(fontSize: 14, fontWeight: FontWeight.bold, color: HandDrawnTokens.pencilBlack),
+                ),
+                const SizedBox(height: 6),
+                TextField(
+                  controller: _nameController,
+                  style: HandDrawnTokens.bodyFont(color: HandDrawnTokens.pencilBlack, fontSize: 15),
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: HandDrawnTokens.warmPaper,
+                    hintText: 'e.g. Alex or Seeker',
+                    hintStyle: HandDrawnTokens.bodyFont(color: HandDrawnTokens.erasedPencil),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    border: OutlineInputBorder(
+                      borderRadius: HandDrawnTokens.wobblySm,
+                      borderSide: BorderSide(color: HandDrawnTokens.pencilBlack, width: 1.5),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: HandDrawnTokens.wobblySm,
+                      borderSide: BorderSide(color: HandDrawnTokens.pencilBlack, width: 1.5),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: HandDrawnTokens.wobblySm,
+                      borderSide: BorderSide(color: HandDrawnTokens.markerRed, width: 2),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Date & Time Row
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Birth Date',
+                            style: HandDrawnTokens.headingFont(fontSize: 14, fontWeight: FontWeight.bold, color: HandDrawnTokens.pencilBlack),
                           ),
-                        ),
+                          const SizedBox(height: 6),
+                          InkWell(
+                            onTap: _pickDate,
+                            borderRadius: HandDrawnTokens.wobblySm,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                              decoration: BoxDecoration(
+                                color: HandDrawnTokens.warmPaper,
+                                borderRadius: HandDrawnTokens.wobblySm,
+                                border: Border.all(color: HandDrawnTokens.pencilBlack, width: 1.5),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.calendar_today_rounded, size: 16, color: HandDrawnTokens.markerRed),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      '${_selectedDate.year}/${_selectedDate.month.toString().padLeft(2, '0')}/${_selectedDate.day.toString().padLeft(2, '0')}',
+                                      style: HandDrawnTokens.bodyFont(color: HandDrawnTokens.pencilBlack, fontSize: 14, fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Birth Time',
+                            style: HandDrawnTokens.headingFont(fontSize: 14, fontWeight: FontWeight.bold, color: HandDrawnTokens.pencilBlack),
+                          ),
+                          const SizedBox(height: 6),
+                          InkWell(
+                            onTap: _pickTime,
+                            borderRadius: HandDrawnTokens.wobblySm,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                              decoration: BoxDecoration(
+                                color: HandDrawnTokens.warmPaper,
+                                borderRadius: HandDrawnTokens.wobblySm,
+                                border: Border.all(color: HandDrawnTokens.pencilBlack, width: 1.5),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.access_time_rounded, size: 16, color: HandDrawnTokens.ballpointBlue),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      _selectedTime.format(context),
+                                      style: HandDrawnTokens.bodyFont(color: HandDrawnTokens.pencilBlack, fontSize: 14, fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Birth time helps calculate your Rising Sign (Ascendant) and Chinese BaZi hour pillar.',
+                  style: HandDrawnTokens.bodyFont(fontSize: 12.5, color: HandDrawnTokens.erasedPencil),
+                ),
+                const SizedBox(height: 16),
+
+                // Japanese Blood Type Selector
+                Text(
+                  'Blood Type (Japanese Ketsuekigata)',
+                  style: HandDrawnTokens.headingFont(fontSize: 14, fontWeight: FontWeight.bold, color: HandDrawnTokens.pencilBlack),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Used in Japan for interpersonal compatibility and temperament advice.',
+                  style: HandDrawnTokens.bodyFont(fontSize: 12.5, color: HandDrawnTokens.erasedPencil),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: BloodType.values.map((type) {
+                    final isSelected = _selectedBloodType == type;
+                    return Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 3),
+                        child: InkWell(
+                          onTap: () => setState(() => _selectedBloodType = type),
+                          borderRadius: HandDrawnTokens.wobblySm,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            decoration: BoxDecoration(
+                              color: isSelected ? HandDrawnTokens.postItYellow : HandDrawnTokens.warmPaper,
+                              borderRadius: HandDrawnTokens.wobblySm,
+                              border: Border.all(
+                                color: HandDrawnTokens.pencilBlack,
+                                width: isSelected ? 2.2 : 1.5,
+                              ),
+                              boxShadow: isSelected ? HandDrawnTokens.hardShadowSm : [],
+                            ),
+                            child: Center(
+                              child: Text(
+                                'Type ${type.shortName}',
+                                style: HandDrawnTokens.headingFont(
+                                  fontSize: 13,
+                                  fontWeight: isSelected ? FontWeight.w900 : FontWeight.w500,
+                                  color: HandDrawnTokens.pencilBlack,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 16),
+
+                // City / Birthplace
+                Text(
+                  'Birth City or Current Location',
+                  style: HandDrawnTokens.headingFont(fontSize: 14, fontWeight: FontWeight.bold, color: HandDrawnTokens.pencilBlack),
+                ),
+                const SizedBox(height: 6),
+                TextField(
+                  controller: _cityController,
+                  style: HandDrawnTokens.bodyFont(color: HandDrawnTokens.pencilBlack, fontSize: 15),
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: HandDrawnTokens.warmPaper,
+                    hintText: 'e.g. Tokyo, Colombo, London, New York',
+                    hintStyle: HandDrawnTokens.bodyFont(color: HandDrawnTokens.erasedPencil),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    border: OutlineInputBorder(
+                      borderRadius: HandDrawnTokens.wobblySm,
+                      borderSide: BorderSide(color: HandDrawnTokens.pencilBlack, width: 1.5),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: HandDrawnTokens.wobblySm,
+                      borderSide: BorderSide(color: HandDrawnTokens.pencilBlack, width: 1.5),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: HandDrawnTokens.wobblySm,
+                      borderSide: BorderSide(color: HandDrawnTokens.markerRed, width: 2),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // Save Button
+                SizedBox(
+                  width: double.infinity,
+                  child: HandDrawnButton(
+                    text: 'Calculate My Charts & Daily Horoscope',
+                    variant: HandDrawnButtonVariant.primary,
+                    onPressed: _submit,
+                  ),
+                ),
+                if (widget.isFirstTime) ...[
+                  const SizedBox(height: 10),
+                  Center(
+                    child: TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text(
+                        'Explore Default Charts First',
+                        style: HandDrawnTokens.bodyFont(
+                          fontSize: 14,
+                          color: HandDrawnTokens.erasedPencil,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
-              ),
+              ],
             ),
           ),
         ),
-      );
+      ),
+    );
   }
 }

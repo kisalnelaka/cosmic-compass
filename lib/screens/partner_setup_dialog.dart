@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../models/user_profile.dart';
-import '../widgets/glass_card.dart';
+import '../theme/hand_drawn_tokens.dart';
+import '../widgets/hand_drawn_card.dart';
+import '../widgets/hand_drawn_button.dart';
 
 class PartnerSetupDialog extends StatefulWidget {
   final UserProfile? initialPartner;
@@ -60,12 +61,12 @@ class _PartnerSetupDialogState extends State<PartnerSetupDialog> {
       lastDate: DateTime.now(),
       builder: (context, child) {
         return Theme(
-          data: ThemeData.dark().copyWith(
-            colorScheme: const ColorScheme.dark(
-              primary: Color(0xFFEC4899),
-              onPrimary: Colors.white,
-              surface: Color(0xFF131A2E),
-              onSurface: Colors.white,
+          data: ThemeData.light().copyWith(
+            colorScheme: ColorScheme.light(
+              primary: HandDrawnTokens.markerRed,
+              onPrimary: HandDrawnTokens.warmPaper,
+              surface: HandDrawnTokens.warmPaper,
+              onSurface: HandDrawnTokens.pencilBlack,
             ),
           ),
           child: child!,
@@ -83,12 +84,12 @@ class _PartnerSetupDialogState extends State<PartnerSetupDialog> {
       initialTime: _selectedTime,
       builder: (context, child) {
         return Theme(
-          data: ThemeData.dark().copyWith(
-            colorScheme: const ColorScheme.dark(
-              primary: Color(0xFFEC4899),
-              onPrimary: Colors.white,
-              surface: Color(0xFF131A2E),
-              onSurface: Colors.white,
+          data: ThemeData.light().copyWith(
+            colorScheme: ColorScheme.light(
+              primary: HandDrawnTokens.markerRed,
+              onPrimary: HandDrawnTokens.warmPaper,
+              surface: HandDrawnTokens.warmPaper,
+              onSurface: HandDrawnTokens.pencilBlack,
             ),
           ),
           child: child!,
@@ -124,10 +125,9 @@ class _PartnerSetupDialogState extends State<PartnerSetupDialog> {
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 480),
-          child: GlassCard(
-            backgroundColor: const Color(0xFF0F1629).withValues(alpha: 0.96),
-            borderColor: const Color(0xFFEC4899).withValues(alpha: 0.4),
-            borderRadius: 24,
+          child: HandDrawnCard(
+            decoration: HandDrawnCardDecoration.tape,
+            backgroundColor: HandDrawnTokens.cardWhite,
             padding: const EdgeInsets.all(24),
             child: SingleChildScrollView(
               child: Column(
@@ -140,11 +140,11 @@ class _PartnerSetupDialogState extends State<PartnerSetupDialog> {
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFFEC4899), Color(0xFF8B5CF6)],
-                          ),
+                          color: HandDrawnTokens.postItYellow,
+                          border: Border.all(color: HandDrawnTokens.pencilBlack, width: 2),
+                          boxShadow: HandDrawnTokens.hardShadowSm,
                         ),
-                        child: const Icon(Icons.favorite, color: Colors.white, size: 22),
+                        child: Icon(Icons.favorite, color: HandDrawnTokens.markerRed, size: 22),
                       ),
                       const SizedBox(width: 14),
                       Expanded(
@@ -153,23 +153,23 @@ class _PartnerSetupDialogState extends State<PartnerSetupDialog> {
                           children: [
                             Text(
                               widget.initialPartner != null ? 'Edit Partner Profile' : 'Add Partner Details',
-                              style: GoogleFonts.outfit(
+                              style: HandDrawnTokens.headingFont(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                                color: HandDrawnTokens.pencilBlack,
                               ),
                             ),
                             const SizedBox(height: 2),
                             Text(
                               'Calculate multi-cultural synastry and relationship harmony across 5 ancient traditions.',
-                              style: TextStyle(fontSize: 12, color: Colors.white.withValues(alpha: 0.7)),
+                              style: HandDrawnTokens.bodyFont(fontSize: 13, color: HandDrawnTokens.erasedPencil),
                             ),
                           ],
                         ),
                       ),
                       IconButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        icon: const Icon(Icons.close, color: Colors.white54, size: 20),
+                        icon: Icon(Icons.close, color: HandDrawnTokens.pencilBlack, size: 22),
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
                       ),
@@ -180,30 +180,34 @@ class _PartnerSetupDialogState extends State<PartnerSetupDialog> {
                   // Partner Name
                   Text(
                     'PARTNER\'S NAME',
-                    style: GoogleFonts.outfit(
-                      fontSize: 11,
+                    style: HandDrawnTokens.headingFont(
+                      fontSize: 12,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFFEC4899),
+                      color: HandDrawnTokens.markerRed,
                       letterSpacing: 1.5,
                     ),
                   ),
                   const SizedBox(height: 6),
                   TextField(
                     controller: _nameController,
-                    style: const TextStyle(color: Colors.white),
+                    style: HandDrawnTokens.bodyFont(color: HandDrawnTokens.pencilBlack, fontSize: 15),
                     decoration: InputDecoration(
                       filled: true,
-                      fillColor: Colors.white.withValues(alpha: 0.06),
+                      fillColor: HandDrawnTokens.warmPaper,
                       hintText: 'e.g., Alex or Partner',
-                      hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
-                      prefixIcon: const Icon(Icons.person_outline, color: Color(0xFFEC4899), size: 20),
+                      hintStyle: HandDrawnTokens.bodyFont(color: HandDrawnTokens.erasedPencil),
+                      prefixIcon: Icon(Icons.person_outline, color: HandDrawnTokens.pencilBlack, size: 20),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.15)),
+                        borderRadius: HandDrawnTokens.wobblySm,
+                        borderSide: BorderSide(color: HandDrawnTokens.pencilBlack, width: 1.5),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: HandDrawnTokens.wobblySm,
+                        borderSide: BorderSide(color: HandDrawnTokens.pencilBlack, width: 1.5),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: const BorderSide(color: Color(0xFFEC4899), width: 1.5),
+                        borderRadius: HandDrawnTokens.wobblySm,
+                        borderSide: BorderSide(color: HandDrawnTokens.markerRed, width: 2),
                       ),
                       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     ),
@@ -219,32 +223,32 @@ class _PartnerSetupDialogState extends State<PartnerSetupDialog> {
                           children: [
                             Text(
                               'BIRTH DATE',
-                              style: GoogleFonts.outfit(
-                                fontSize: 11,
+                              style: HandDrawnTokens.headingFont(
+                                fontSize: 12,
                                 fontWeight: FontWeight.bold,
-                                color: const Color(0xFFEC4899),
+                                color: HandDrawnTokens.markerRed,
                                 letterSpacing: 1.5,
                               ),
                             ),
                             const SizedBox(height: 6),
                             InkWell(
                               onTap: _pickDate,
-                              borderRadius: BorderRadius.circular(14),
+                              borderRadius: HandDrawnTokens.wobblySm,
                               child: Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.06),
-                                  borderRadius: BorderRadius.circular(14),
-                                  border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
+                                  color: HandDrawnTokens.warmPaper,
+                                  borderRadius: HandDrawnTokens.wobblySm,
+                                  border: Border.all(color: HandDrawnTokens.pencilBlack, width: 1.5),
                                 ),
                                 child: Row(
                                   children: [
-                                    const Icon(Icons.calendar_today, color: Color(0xFFEC4899), size: 18),
+                                    Icon(Icons.calendar_today, color: HandDrawnTokens.markerRed, size: 18),
                                     const SizedBox(width: 8),
                                     Expanded(
                                       child: Text(
                                         '${_selectedDate.year}-${_selectedDate.month.toString().padLeft(2, '0')}-${_selectedDate.day.toString().padLeft(2, '0')}',
-                                        style: const TextStyle(color: Colors.white, fontSize: 13),
+                                        style: HandDrawnTokens.bodyFont(color: HandDrawnTokens.pencilBlack, fontSize: 13.5, fontWeight: FontWeight.bold),
                                       ),
                                     ),
                                   ],
@@ -261,32 +265,32 @@ class _PartnerSetupDialogState extends State<PartnerSetupDialog> {
                           children: [
                             Text(
                               'BIRTH TIME',
-                              style: GoogleFonts.outfit(
-                                fontSize: 11,
+                              style: HandDrawnTokens.headingFont(
+                                fontSize: 12,
                                 fontWeight: FontWeight.bold,
-                                color: const Color(0xFFEC4899),
+                                color: HandDrawnTokens.ballpointBlue,
                                 letterSpacing: 1.5,
                               ),
                             ),
                             const SizedBox(height: 6),
                             InkWell(
                               onTap: _pickTime,
-                              borderRadius: BorderRadius.circular(14),
+                              borderRadius: HandDrawnTokens.wobblySm,
                               child: Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.06),
-                                  borderRadius: BorderRadius.circular(14),
-                                  border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
+                                  color: HandDrawnTokens.warmPaper,
+                                  borderRadius: HandDrawnTokens.wobblySm,
+                                  border: Border.all(color: HandDrawnTokens.pencilBlack, width: 1.5),
                                 ),
                                 child: Row(
                                   children: [
-                                    const Icon(Icons.access_time, color: Color(0xFFEC4899), size: 18),
+                                    Icon(Icons.access_time, color: HandDrawnTokens.ballpointBlue, size: 18),
                                     const SizedBox(width: 8),
                                     Expanded(
                                       child: Text(
                                         '${_selectedTime.hour.toString().padLeft(2, '0')}:${_selectedTime.minute.toString().padLeft(2, '0')}',
-                                        style: const TextStyle(color: Colors.white, fontSize: 13),
+                                        style: HandDrawnTokens.bodyFont(color: HandDrawnTokens.pencilBlack, fontSize: 13.5, fontWeight: FontWeight.bold),
                                       ),
                                     ),
                                   ],
@@ -303,10 +307,10 @@ class _PartnerSetupDialogState extends State<PartnerSetupDialog> {
                   // Blood Type
                   Text(
                     'BLOOD TYPE (JAPANESE KETSUEKIGATA)',
-                    style: GoogleFonts.outfit(
-                      fontSize: 11,
+                    style: HandDrawnTokens.headingFont(
+                      fontSize: 12,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFFEC4899),
+                      color: HandDrawnTokens.markerRed,
                       letterSpacing: 1.5,
                     ),
                   ),
@@ -319,27 +323,25 @@ class _PartnerSetupDialogState extends State<PartnerSetupDialog> {
                           padding: const EdgeInsets.symmetric(horizontal: 3),
                           child: InkWell(
                             onTap: () => setState(() => _selectedBloodType = bt),
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: HandDrawnTokens.wobblySm,
                             child: Container(
                               padding: const EdgeInsets.symmetric(vertical: 10),
                               decoration: BoxDecoration(
-                                color: isSelected
-                                    ? const Color(0xFFEC4899)
-                                    : Colors.white.withValues(alpha: 0.06),
-                                borderRadius: BorderRadius.circular(12),
+                                color: isSelected ? HandDrawnTokens.postItYellow : HandDrawnTokens.warmPaper,
+                                borderRadius: HandDrawnTokens.wobblySm,
                                 border: Border.all(
-                                  color: isSelected
-                                      ? const Color(0xFFEC4899)
-                                      : Colors.white.withValues(alpha: 0.12),
+                                  color: HandDrawnTokens.pencilBlack,
+                                  width: isSelected ? 2.2 : 1.5,
                                 ),
+                                boxShadow: isSelected ? HandDrawnTokens.hardShadowSm : [],
                               ),
                               child: Center(
                                 child: Text(
                                   bt.shortName,
-                                  style: TextStyle(
+                                  style: HandDrawnTokens.headingFont(
                                     fontSize: 14,
-                                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                                    color: isSelected ? Colors.white : Colors.white70,
+                                    fontWeight: isSelected ? FontWeight.w900 : FontWeight.normal,
+                                    color: HandDrawnTokens.pencilBlack,
                                   ),
                                 ),
                               ),
@@ -354,30 +356,34 @@ class _PartnerSetupDialogState extends State<PartnerSetupDialog> {
                   // City Name
                   Text(
                     'BIRTH CITY & REGION',
-                    style: GoogleFonts.outfit(
-                      fontSize: 11,
+                    style: HandDrawnTokens.headingFont(
+                      fontSize: 12,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFFEC4899),
+                      color: HandDrawnTokens.markerRed,
                       letterSpacing: 1.5,
                     ),
                   ),
                   const SizedBox(height: 6),
                   TextField(
                     controller: _cityController,
-                    style: const TextStyle(color: Colors.white),
+                    style: HandDrawnTokens.bodyFont(color: HandDrawnTokens.pencilBlack, fontSize: 15),
                     decoration: InputDecoration(
                       filled: true,
-                      fillColor: Colors.white.withValues(alpha: 0.06),
+                      fillColor: HandDrawnTokens.warmPaper,
                       hintText: 'e.g., Kyoto, Japan or New York, USA',
-                      hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
-                      prefixIcon: const Icon(Icons.location_city, color: Color(0xFFEC4899), size: 20),
+                      hintStyle: HandDrawnTokens.bodyFont(color: HandDrawnTokens.erasedPencil),
+                      prefixIcon: Icon(Icons.location_city, color: HandDrawnTokens.pencilBlack, size: 20),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.15)),
+                        borderRadius: HandDrawnTokens.wobblySm,
+                        borderSide: BorderSide(color: HandDrawnTokens.pencilBlack, width: 1.5),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: HandDrawnTokens.wobblySm,
+                        borderSide: BorderSide(color: HandDrawnTokens.pencilBlack, width: 1.5),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: const BorderSide(color: Color(0xFFEC4899), width: 1.5),
+                        borderRadius: HandDrawnTokens.wobblySm,
+                        borderSide: BorderSide(color: HandDrawnTokens.markerRed, width: 2),
                       ),
                       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     ),
@@ -399,39 +405,20 @@ class _PartnerSetupDialogState extends State<PartnerSetupDialog> {
                         const SizedBox(width: 8),
                       ],
                       Expanded(
-                        child: OutlinedButton(
+                        child: HandDrawnButton(
+                          text: 'Cancel',
+                          variant: HandDrawnButtonVariant.secondary,
                           onPressed: () => Navigator.of(context).pop(),
-                          style: OutlinedButton.styleFrom(
-                            side: BorderSide(color: Colors.white.withValues(alpha: 0.2)),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-                          ),
-                          child: const Text('Cancel', style: TextStyle(color: Colors.white70)),
                         ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
                         flex: 2,
-                        child: ElevatedButton(
+                        child: HandDrawnButton(
+                          text: 'Calculate Synergy',
+                          icon: Icons.favorite,
+                          variant: HandDrawnButtonVariant.primary,
                           onPressed: _submit,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFEC4899),
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-                            elevation: 4,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(Icons.favorite, size: 16),
-                              const SizedBox(width: 8),
-                              Text(
-                                'Calculate Synergy',
-                                style: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 14),
-                              ),
-                            ],
-                          ),
                         ),
                       ),
                     ],

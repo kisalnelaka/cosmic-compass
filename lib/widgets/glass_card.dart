@@ -1,7 +1,7 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
+import '../theme/hand_drawn_tokens.dart';
 
-class GlassCard extends StatelessWidget {
+class GlassCard extends StatefulWidget {
   final Widget child;
   final double borderRadius;
   final EdgeInsetsGeometry? padding;
@@ -24,48 +24,54 @@ class GlassCard extends StatelessWidget {
   });
 
   @override
+  State<GlassCard> createState() => _GlassCardState();
+}
+
+class _GlassCardState extends State<GlassCard> {
+  bool _isPressed = false;
+
+  @override
   Widget build(BuildContext context) {
-    Widget content = ClipRRect(
-      borderRadius: BorderRadius.circular(borderRadius),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
-        child: Container(
-          padding: padding,
-          decoration: BoxDecoration(
-            color: gradient == null
-                ? (backgroundColor ?? const Color(0xFF131A2E).withValues(alpha: 0.72))
-                : null,
-            gradient: gradient,
-            borderRadius: BorderRadius.circular(borderRadius),
-            border: Border.all(
-              color: borderColor ?? Colors.white.withValues(alpha: 0.12),
-              width: 1.2,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.28),
-                blurRadius: 18,
-                offset: const Offset(0, 6),
-              ),
-            ],
-          ),
-          child: child,
+    final bg = widget.backgroundColor != null &&
+            widget.backgroundColor!.computeLuminance() < 0.3
+        ? HandDrawnTokens.cardWhite // Convert old dark colors to clean card white
+        : (widget.backgroundColor ?? HandDrawnTokens.cardWhite);
+
+    final borderC = widget.borderColor != null &&
+            widget.borderColor!.computeLuminance() > 0.8
+        ? HandDrawnTokens.pencilBlack
+        : (widget.borderColor ?? HandDrawnTokens.pencilBlack);
+
+    Widget content = AnimatedContainer(
+      duration: const Duration(milliseconds: 90),
+      curve: Curves.easeInOut,
+      transform: _isPressed ? Matrix4.translationValues(2, 2, 0) : Matrix4.identity(),
+      padding: widget.padding,
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(widget.borderRadius),
+        border: Border.all(
+          color: borderC,
+          width: 2.5,
         ),
+        boxShadow: _isPressed
+            ? HandDrawnTokens.hardShadowPressed
+            : HandDrawnTokens.hardShadowMd,
       ),
+      child: widget.child,
     );
 
-    if (margin != null) {
-      content = Padding(padding: margin!, child: content);
+    if (widget.margin != null) {
+      content = Padding(padding: widget.margin!, child: content);
     }
 
-    if (onTap != null) {
-      return Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(borderRadius),
-          child: content,
-        ),
+    if (widget.onTap != null) {
+      return GestureDetector(
+        onTapDown: (_) => setState(() => _isPressed = true),
+        onTapUp: (_) => setState(() => _isPressed = false),
+        onTapCancel: () => setState(() => _isPressed = false),
+        onTap: widget.onTap,
+        child: content,
       );
     }
 

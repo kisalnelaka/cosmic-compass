@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../models/horoscope.dart';
 import '../models/user_profile.dart';
 import '../services/horoscope_service.dart';
 import '../services/daily_prediction_service.dart';
 import '../services/sign_calculator.dart';
 import '../services/color_mapper.dart';
-import '../widgets/glass_card.dart';
+import '../services/share_service.dart';
+import '../services/notification_service.dart';
+import '../services/widget_service.dart';
+import '../theme/hand_drawn_tokens.dart';
+import '../widgets/hand_drawn_card.dart';
+import '../widgets/hand_drawn_button.dart';
+import '../widgets/hand_drawn_badge.dart';
 import '../widgets/luck_indicator_bar.dart';
 import '../widgets/cultural_disclaimer_card.dart';
 import 'rune_cast_dialog.dart';
@@ -32,6 +37,7 @@ class _TodayScreenState extends State<TodayScreen> {
   late Future<List<Horoscope>> _horoscopesFuture;
   late List<DailyCulturalForecast> _dailyForecasts;
   late List<DailyConsensusPoint> _dailyConsensus;
+  bool _notificationsEnabled = true;
 
   static const List<String> _months = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -46,6 +52,16 @@ class _TodayScreenState extends State<TodayScreen> {
   void initState() {
     super.initState();
     _loadData();
+    _loadNotificationState();
+  }
+
+  Future<void> _loadNotificationState() async {
+    final enabled = await NotificationService.isEnabled();
+    if (mounted) {
+      setState(() {
+        _notificationsEnabled = enabled;
+      });
+    }
   }
 
   @override
@@ -73,6 +89,29 @@ class _TodayScreenState extends State<TodayScreen> {
     await _horoscopesFuture;
   }
 
+  Future<void> _toggleNotifications() async {
+    final newState = !_notificationsEnabled;
+    await NotificationService.setEnabled(newState);
+    setState(() {
+      _notificationsEnabled = newState;
+    });
+
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: HandDrawnTokens.pencilBlack,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: HandDrawnTokens.wobblySm),
+        content: Text(
+          newState
+              ? 'Morning notifications turned on (7:00 AM fortune alert)'
+              : 'Morning notifications turned off',
+          style: HandDrawnTokens.bodyFont(color: HandDrawnTokens.warmPaper, fontSize: 14),
+        ),
+      ),
+    );
+  }
+
   void _openRuneCast() {
     showDialog(
       context: context,
@@ -87,6 +126,21 @@ class _TodayScreenState extends State<TodayScreen> {
     );
   }
 
+  void _shareReading(Horoscope h) {
+    ShareService.copyHoroscopeToClipboard(h, profileName: widget.profile.name);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: HandDrawnTokens.pencilBlack,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: HandDrawnTokens.wobblySm),
+        content: Text(
+          'Daily horoscope copied to clipboard. Ready to share!',
+          style: HandDrawnTokens.bodyFont(color: HandDrawnTokens.warmPaper, fontSize: 14),
+        ),
+      ),
+    );
+  }
+
   void _showTransitDetail(DailyCulturalForecast forecast) {
     showModalBottomSheet(
       context: context,
@@ -96,10 +150,9 @@ class _TodayScreenState extends State<TodayScreen> {
         return Container(
           constraints: const BoxConstraints(maxWidth: 600),
           margin: const EdgeInsets.all(16),
-          child: GlassCard(
-            backgroundColor: const Color(0xFF0F172A).withValues(alpha: 0.96),
-            borderColor: forecast.accentColor.withValues(alpha: 0.5),
-            borderRadius: 24,
+          child: HandDrawnCard(
+            decoration: HandDrawnCardDecoration.pin,
+            backgroundColor: HandDrawnTokens.cardWhite,
             padding: const EdgeInsets.all(24),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -108,62 +161,46 @@ class _TodayScreenState extends State<TodayScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: forecast.accentColor.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: forecast.accentColor.withValues(alpha: 0.4)),
-                      ),
-                      child: Text(
-                        forecast.traditionName,
-                        style: GoogleFonts.outfit(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          color: forecast.accentColor,
-                        ),
-                      ),
+                    HandDrawnBadge(
+                      label: forecast.traditionName,
+                      color: forecast.accentColor,
                     ),
-                    Text(forecast.luckySymbol, style: const TextStyle(fontSize: 24)),
+                    Text(forecast.luckySymbol, style: const TextStyle(fontSize: 28)),
                   ],
                 ),
                 const SizedBox(height: 14),
                 Text(
                   forecast.headline,
-                  style: GoogleFonts.outfit(
-                    fontSize: 18,
+                  style: HandDrawnTokens.headingFont(
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: HandDrawnTokens.pencilBlack,
                   ),
                 ),
                 const SizedBox(height: 12),
                 Container(
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.05),
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+                    color: HandDrawnTokens.warmPaper,
+                    borderRadius: HandDrawnTokens.wobblySm,
+                    border: Border.all(color: HandDrawnTokens.pencilBlack, width: 1.5),
                   ),
                   child: Text(
                     forecast.guidance,
-                    style: const TextStyle(
-                      fontSize: 14,
+                    style: HandDrawnTokens.bodyFont(
+                      fontSize: 15,
                       height: 1.5,
-                      color: Colors.white,
+                      color: HandDrawnTokens.pencilBlack,
                     ),
                   ),
                 ),
                 const SizedBox(height: 20),
                 SizedBox(
                   width: double.infinity,
-                  child: TextButton(
+                  child: HandDrawnButton(
+                    text: 'Close Note',
+                    variant: HandDrawnButtonVariant.secondary,
                     onPressed: () => Navigator.of(context).pop(),
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      backgroundColor: Colors.white.withValues(alpha: 0.08),
-                    ),
-                    child: Text('Close', style: GoogleFonts.outfit(color: Colors.white, fontWeight: FontWeight.bold)),
                   ),
                 ),
               ],
@@ -184,8 +221,8 @@ class _TodayScreenState extends State<TodayScreen> {
 
     return RefreshIndicator(
       onRefresh: _refresh,
-      color: const Color(0xFFFFD700),
-      backgroundColor: const Color(0xFF1E1B4B),
+      color: HandDrawnTokens.markerRed,
+      backgroundColor: HandDrawnTokens.warmPaper,
       child: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
@@ -198,69 +235,74 @@ class _TodayScreenState extends State<TodayScreen> {
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: 8,
-                                height: 8,
-                                decoration: const BoxDecoration(
-                                  color: Color(0xFFFFD700),
-                                  shape: BoxShape.circle,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  width: 9,
+                                  height: 9,
+                                  decoration: BoxDecoration(
+                                    color: HandDrawnTokens.markerRed,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ).animate(onPlay: (c) => c.repeat(reverse: true)).scale(
+                                      begin: const Offset(0.8, 0.8),
+                                      end: const Offset(1.3, 1.3),
+                                    ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'DAILY FIELD NOTES',
+                                  style: HandDrawnTokens.headingFont(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w700,
+                                    color: HandDrawnTokens.markerRed,
+                                    letterSpacing: 1.5,
+                                  ),
                                 ),
-                              ).animate(onPlay: (c) => c.repeat(reverse: true)).scale(begin: const Offset(0.8, 0.8), end: const Offset(1.3, 1.3)),
-                              const SizedBox(width: 8),
-                              Text(
-                                'DAILY COSMIC GUIDANCE',
-                                style: GoogleFonts.outfit(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w700,
-                                  color: const Color(0xFFFFD700),
-                                  letterSpacing: 2,
-                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              dateHuman,
+                              style: HandDrawnTokens.headingFont(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w900,
+                                color: HandDrawnTokens.pencilBlack,
+                                letterSpacing: -0.3,
                               ),
-                            ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          IconButton(
+                            tooltip: _notificationsEnabled ? 'Morning alerts active' : 'Enable morning alerts',
+                            onPressed: _toggleNotifications,
+                            icon: Icon(
+                              _notificationsEnabled
+                                  ? Icons.notifications_active_rounded
+                                  : Icons.notifications_off_outlined,
+                              color: _notificationsEnabled
+                                  ? HandDrawnTokens.markerRed
+                                  : HandDrawnTokens.erasedPencil,
+                            ),
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            dateHuman,
-                            style: GoogleFonts.outfit(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w900,
-                              color: Colors.white,
-                              letterSpacing: -0.3,
+                          const SizedBox(width: 4),
+                          GestureDetector(
+                            onTap: widget.onEditProfile,
+                            child: HandDrawnBadge(
+                              label: widget.profile.name,
+                              color: HandDrawnTokens.ballpointBlue,
+                              isPostIt: false,
                             ),
                           ),
                         ],
-                      ),
-                      InkWell(
-                        onTap: widget.onEditProfile,
-                        borderRadius: BorderRadius.circular(16),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
-                          ),
-                          child: Row(
-                            children: [
-                              const Icon(Icons.person_rounded, size: 16, color: Color(0xFFFFD700)),
-                              const SizedBox(width: 6),
-                              Text(
-                                widget.profile.name,
-                                style: GoogleFonts.outfit(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
                       ),
                     ],
                   ),
@@ -277,11 +319,14 @@ class _TodayScreenState extends State<TodayScreen> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    child: GlassCard(
+                    child: HandDrawnCard(
                       child: const Center(
                         child: Padding(
-                          padding: EdgeInsets.all(24.0),
-                          child: CircularProgressIndicator(color: Color(0xFFFFD700)),
+                          padding: EdgeInsets.all(28.0),
+                          child: CircularProgressIndicator(
+                            color: Color(0xFF2D2D2D),
+                            strokeWidth: 2.5,
+                          ),
                         ),
                       ),
                     ),
@@ -302,6 +347,9 @@ class _TodayScreenState extends State<TodayScreen> {
                 }
                 userHoroscope ??= list.first;
 
+                // Sync with Home Screen Widget for mobile
+                WidgetService.updateWidget(userHoroscope);
+
                 return _buildUserOhaAsaHeroCard(userHoroscope);
               },
             ),
@@ -311,63 +359,62 @@ class _TodayScreenState extends State<TodayScreen> {
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 14, 20, 10),
-              child: InkWell(
+              child: HandDrawnCard(
                 onTap: _openRuneCast,
-                borderRadius: BorderRadius.circular(20),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF0F1E36), Color(0xFF1E293B)],
+                decoration: HandDrawnCardDecoration.none,
+                backgroundColor: HandDrawnTokens.cardWhite,
+                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: HandDrawnTokens.ballpointBlue.withValues(alpha: 0.12),
+                        borderRadius: HandDrawnTokens.wobblySm,
+                        border: Border.all(color: HandDrawnTokens.ballpointBlue, width: 2),
+                      ),
+                      child: Center(
+                        child: Text(
+                          'ᛟ',
+                          style: TextStyle(
+                            fontSize: 26,
+                            color: HandDrawnTokens.ballpointBlue,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: const Color(0xFF38BDF8).withValues(alpha: 0.45), width: 1.2),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF38BDF8).withValues(alpha: 0.12),
-                        blurRadius: 14,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF38BDF8).withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(14),
-                          border: Border.all(color: const Color(0xFF38BDF8)),
-                        ),
-                        child: const Center(
-                          child: Text('ᛟ', style: TextStyle(fontSize: 26, color: Color(0xFF38BDF8))),
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Cast Today’s Norse Rune',
-                              style: GoogleFonts.outfit(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Cast Today’s Norse Rune',
+                            style: HandDrawnTokens.headingFont(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: HandDrawnTokens.pencilBlack,
                             ),
-                            const SizedBox(height: 2),
-                            Text(
-                              'Draw from the 24 Elder Futhark runes for daily clarity',
-                              style: TextStyle(fontSize: 12.5, color: Colors.white.withValues(alpha: 0.75)),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            'Draw from the 24 Elder Futhark runes for practical daily clarity',
+                            style: HandDrawnTokens.bodyFont(
+                              fontSize: 13.5,
+                              color: HandDrawnTokens.erasedPencil,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      const Icon(Icons.arrow_forward_ios_rounded, color: Color(0xFF38BDF8), size: 16),
-                    ],
-                  ),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      color: HandDrawnTokens.pencilBlack,
+                      size: 16,
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -382,16 +429,19 @@ class _TodayScreenState extends State<TodayScreen> {
                 children: [
                   Text(
                     'Today’s Insights from Around the World',
-                    style: GoogleFonts.outfit(
-                      fontSize: 18,
+                    style: HandDrawnTokens.headingFont(
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: HandDrawnTokens.pencilBlack,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    'Swipe horizontally to explore daily advice from Asian, Mayan, Vedic, and Nordic traditions',
-                    style: TextStyle(fontSize: 12.5, color: Colors.white.withValues(alpha: 0.7)),
+                    'Swipe horizontally to explore advice from Asian, Mayan, Vedic, and Nordic traditions',
+                    style: HandDrawnTokens.bodyFont(
+                      fontSize: 14,
+                      color: HandDrawnTokens.erasedPencil,
+                    ),
                   ),
                 ],
               ),
@@ -400,7 +450,7 @@ class _TodayScreenState extends State<TodayScreen> {
 
           SliverToBoxAdapter(
             child: SizedBox(
-              height: 220,
+              height: 230,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -408,12 +458,13 @@ class _TodayScreenState extends State<TodayScreen> {
                 itemBuilder: (context, index) {
                   final item = _dailyForecasts[index];
                   return Container(
-                    width: 320,
+                    width: 310,
                     margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                    child: GlassCard(
+                    child: HandDrawnCard(
                       onTap: () => _showTransitDetail(item),
+                      decoration: index % 2 == 0 ? HandDrawnCardDecoration.tape : HandDrawnCardDecoration.none,
+                      backgroundColor: HandDrawnTokens.cardWhite,
                       padding: const EdgeInsets.all(16),
-                      borderColor: item.accentColor.withValues(alpha: 0.35),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -421,27 +472,13 @@ class _TodayScreenState extends State<TodayScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Expanded(
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                  decoration: BoxDecoration(
-                                    color: item.accentColor.withValues(alpha: 0.18),
-                                    borderRadius: BorderRadius.circular(8),
-                                    border: Border.all(color: item.accentColor.withValues(alpha: 0.4)),
-                                  ),
-                                  child: Text(
-                                    item.traditionName,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.outfit(
-                                      fontSize: 11.5,
-                                      fontWeight: FontWeight.w600,
-                                      color: item.accentColor,
-                                    ),
-                                  ),
+                                child: HandDrawnBadge(
+                                  label: item.traditionName,
+                                  color: item.accentColor,
                                 ),
                               ),
                               const SizedBox(width: 8),
-                              Text(item.luckySymbol, style: const TextStyle(fontSize: 18)),
+                              Text(item.luckySymbol, style: const TextStyle(fontSize: 20)),
                             ],
                           ),
                           const SizedBox(height: 10),
@@ -449,10 +486,10 @@ class _TodayScreenState extends State<TodayScreen> {
                             item.headline,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.outfit(
-                              fontSize: 14.5,
+                            style: HandDrawnTokens.headingFont(
+                              fontSize: 15.5,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              color: HandDrawnTokens.pencilBlack,
                             ),
                           ),
                           const SizedBox(height: 6),
@@ -461,18 +498,22 @@ class _TodayScreenState extends State<TodayScreen> {
                               item.guidance,
                               maxLines: 4,
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 12.5,
-                                height: 1.45,
-                                color: Colors.white.withValues(alpha: 0.88),
+                              style: HandDrawnTokens.bodyFont(
+                                fontSize: 14,
+                                height: 1.4,
+                                color: HandDrawnTokens.pencilBlack,
                               ),
                             ),
                           ),
                           Align(
                             alignment: Alignment.bottomRight,
                             child: Text(
-                              'Tap to read full advice →',
-                              style: TextStyle(fontSize: 11, color: item.accentColor.withValues(alpha: 0.9), fontWeight: FontWeight.w600),
+                              'Tap to inspect note →',
+                              style: HandDrawnTokens.bodyFont(
+                                fontSize: 12.5,
+                                color: HandDrawnTokens.ballpointBlue,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ],
@@ -493,38 +534,31 @@ class _TodayScreenState extends State<TodayScreen> {
                 children: [
                   Row(
                     children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF00E5FF).withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: const Color(0xFF00E5FF).withValues(alpha: 0.4)),
-                        ),
-                        child: Text(
-                          'SYNCHRONICITY',
-                          style: GoogleFonts.outfit(
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                            color: const Color(0xFF00E5FF),
-                            letterSpacing: 1.2,
-                          ),
-                        ),
+                      HandDrawnBadge(
+                        label: 'SYNCHRONICITY',
+                        color: HandDrawnTokens.markerRed,
+                        isPostIt: true,
                       ),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Where World Cultures Agree Today',
-                        style: GoogleFonts.outfit(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          'Where World Cultures Agree Today',
+                          style: HandDrawnTokens.headingFont(
+                            fontSize: 19,
+                            fontWeight: FontWeight.bold,
+                            color: HandDrawnTokens.pencilBlack,
+                          ),
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'When cultures from different parts of the world offer the same advice for your day',
-                    style: TextStyle(fontSize: 12.5, color: Colors.white.withValues(alpha: 0.7)),
+                    'When distinct astrological systems arrive at the exact same recommendation',
+                    style: HandDrawnTokens.bodyFont(
+                      fontSize: 14,
+                      color: HandDrawnTokens.erasedPencil,
+                    ),
                   ),
                 ],
               ),
@@ -553,16 +587,19 @@ class _TodayScreenState extends State<TodayScreen> {
                     children: [
                       Text(
                         'Oha Asa TV Ranking',
-                        style: GoogleFonts.outfit(
-                          fontSize: 20,
+                        style: HandDrawnTokens.headingFont(
+                          fontSize: 21,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: HandDrawnTokens.pencilBlack,
                         ),
                       ),
                       const SizedBox(height: 2),
                       Text(
                         'おはよう朝日です • Japan’s Official 12-Sign Daily Fortune',
-                        style: TextStyle(fontSize: 12.5, color: Colors.white.withValues(alpha: 0.65)),
+                        style: HandDrawnTokens.bodyFont(
+                          fontSize: 13.5,
+                          color: HandDrawnTokens.erasedPencil,
+                        ),
                       ),
                     ],
                   ),
@@ -576,11 +613,14 @@ class _TodayScreenState extends State<TodayScreen> {
             future: _horoscopesFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const SliverToBoxAdapter(
+                return SliverToBoxAdapter(
                   child: Center(
                     child: Padding(
-                      padding: EdgeInsets.all(32.0),
-                      child: CircularProgressIndicator(color: Color(0xFFFFD700)),
+                      padding: const EdgeInsets.all(32.0),
+                      child: CircularProgressIndicator(
+                        color: HandDrawnTokens.markerRed,
+                        strokeWidth: 2.5,
+                      ),
                     ),
                   ),
                 );
@@ -590,10 +630,10 @@ class _TodayScreenState extends State<TodayScreen> {
                 return SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
-                    child: GlassCard(
+                    child: HandDrawnCard(
                       child: Text(
-                        'Error loading horoscopes: ${snapshot.error}',
-                        style: const TextStyle(color: Colors.white70),
+                        'Unable to load daily rankings: ${snapshot.error}',
+                        style: HandDrawnTokens.bodyFont(color: HandDrawnTokens.markerRed),
                       ),
                     ),
                   ),
@@ -616,7 +656,7 @@ class _TodayScreenState extends State<TodayScreen> {
             },
           ),
 
-          // Prominent Cultural Heritage Disclaimer
+          // Cultural Heritage Disclaimer Card
           const SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.fromLTRB(20, 16, 20, 12),
@@ -635,10 +675,9 @@ class _TodayScreenState extends State<TodayScreen> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      child: GlassCard(
-        backgroundColor: const Color(0xFF131B2F).withValues(alpha: 0.9),
-        borderColor: const Color(0xFFFFD700).withValues(alpha: 0.4),
-        borderRadius: 24,
+      child: HandDrawnCard(
+        decoration: HandDrawnCardDecoration.tape,
+        backgroundColor: HandDrawnTokens.postItYellow,
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -649,21 +688,21 @@ class _TodayScreenState extends State<TodayScreen> {
                 Row(
                   children: [
                     Container(
-                      width: 50,
-                      height: 50,
+                      width: 52,
+                      height: 52,
                       decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFFFFD700), Color(0xFFFFA000)],
-                        ),
-                        borderRadius: BorderRadius.circular(16),
+                        color: HandDrawnTokens.cardWhite,
+                        borderRadius: HandDrawnTokens.wobblySm,
+                        border: Border.all(color: HandDrawnTokens.pencilBlack, width: 2.5),
+                        boxShadow: HandDrawnTokens.hardShadowSm,
                       ),
                       child: Center(
                         child: Text(
                           '#${h.rank}',
-                          style: GoogleFonts.outfit(
-                            fontSize: 22,
+                          style: HandDrawnTokens.headingFont(
+                            fontSize: 24,
                             fontWeight: FontWeight.w900,
-                            color: Colors.black,
+                            color: HandDrawnTokens.markerRed,
                           ),
                         ),
                       ),
@@ -676,40 +715,57 @@ class _TodayScreenState extends State<TodayScreen> {
                           children: [
                             Text(
                               '${h.icon} ${h.signName}',
-                              style: GoogleFonts.outfit(
+                              style: HandDrawnTokens.headingFont(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                                color: HandDrawnTokens.pencilBlack,
                               ),
                             ),
                             const SizedBox(width: 8),
                             Text(
                               h.signNameJapanese,
-                              style: TextStyle(fontSize: 13, color: Colors.white.withValues(alpha: 0.6)),
+                              style: HandDrawnTokens.bodyFont(
+                                fontSize: 14,
+                                color: HandDrawnTokens.erasedPencil,
+                              ),
                             ),
                           ],
                         ),
                         Text(
                           'Your Morning TV Fortune',
-                          style: TextStyle(fontSize: 12.5, color: const Color(0xFFFFD700).withValues(alpha: 0.95), fontWeight: FontWeight.w600),
+                          style: HandDrawnTokens.bodyFont(
+                            fontSize: 13.5,
+                            color: HandDrawnTokens.markerRed,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ],
                     ),
                   ],
                 ),
-                IconButton(
-                  onPressed: () => _openDetail(h),
-                  icon: const Icon(Icons.info_outline, color: Colors.white70),
+                Row(
+                  children: [
+                    IconButton(
+                      tooltip: 'Share / Copy Daily Fortune',
+                      onPressed: () => _shareReading(h),
+                      icon: Icon(Icons.share_outlined, color: HandDrawnTokens.pencilBlack),
+                    ),
+                    IconButton(
+                      tooltip: 'View details',
+                      onPressed: () => _openDetail(h),
+                      icon: Icon(Icons.info_outline, color: HandDrawnTokens.pencilBlack),
+                    ),
+                  ],
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 14),
             Text(
               h.description,
-              style: GoogleFonts.outfit(
-                fontSize: 14.5,
+              style: HandDrawnTokens.bodyFont(
+                fontSize: 15.5,
                 height: 1.5,
-                color: Colors.white,
+                color: HandDrawnTokens.pencilBlack,
               ),
             ),
             const SizedBox(height: 16),
@@ -717,25 +773,46 @@ class _TodayScreenState extends State<TodayScreen> {
               children: [
                 Expanded(
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.08),
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
+                      color: HandDrawnTokens.cardWhite,
+                      borderRadius: HandDrawnTokens.wobblySm,
+                      border: Border.all(color: HandDrawnTokens.pencilBlack, width: 2),
+                      boxShadow: HandDrawnTokens.hardShadowSm,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('LUCKY COLOR', style: GoogleFonts.outfit(fontSize: 10.5, fontWeight: FontWeight.bold, color: Colors.white70, letterSpacing: 0.8)),
-                        const SizedBox(height: 6),
+                        Text(
+                          'LUCKY COLOR',
+                          style: HandDrawnTokens.headingFont(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: HandDrawnTokens.pencilBlack,
+                            letterSpacing: 0.8,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
                         Row(
                           children: [
-                            Container(width: 14, height: 14, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+                            Container(
+                              width: 14,
+                              height: 14,
+                              decoration: BoxDecoration(
+                                color: color,
+                                shape: BoxShape.circle,
+                                border: Border.all(color: HandDrawnTokens.pencilBlack, width: 1.5),
+                              ),
+                            ),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
                                 h.luckyColor,
-                                style: const TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.w600),
+                                style: HandDrawnTokens.bodyFont(
+                                  fontSize: 14,
+                                  color: HandDrawnTokens.pencilBlack,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ],
@@ -747,20 +824,35 @@ class _TodayScreenState extends State<TodayScreen> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.08),
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
+                      color: HandDrawnTokens.cardWhite,
+                      borderRadius: HandDrawnTokens.wobblySm,
+                      border: Border.all(color: HandDrawnTokens.pencilBlack, width: 2),
+                      boxShadow: HandDrawnTokens.hardShadowSm,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('LUCKY ITEM', style: GoogleFonts.outfit(fontSize: 10.5, fontWeight: FontWeight.bold, color: Colors.white70, letterSpacing: 0.8)),
-                        const SizedBox(height: 6),
+                        Text(
+                          'LUCKY ITEM',
+                          style: HandDrawnTokens.headingFont(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: HandDrawnTokens.pencilBlack,
+                            letterSpacing: 0.8,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
                         Text(
                           h.luckyItem,
-                          style: const TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.w600),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: HandDrawnTokens.bodyFont(
+                            fontSize: 14,
+                            color: HandDrawnTokens.pencilBlack,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ],
                     ),
@@ -769,10 +861,10 @@ class _TodayScreenState extends State<TodayScreen> {
               ],
             ),
             const SizedBox(height: 16),
-            LuckIndicatorBar(label: 'Money', score: h.moneyLuck, icon: Icons.attach_money_rounded, color: const Color(0xFFFFD700)),
-            LuckIndicatorBar(label: 'Love', score: h.loveLuck, icon: Icons.favorite_rounded, color: const Color(0xFFFF4081)),
-            LuckIndicatorBar(label: 'Work', score: h.workLuck, icon: Icons.work_outline_rounded, color: const Color(0xFF00E5FF)),
-            LuckIndicatorBar(label: 'Health', score: h.healthLuck, icon: Icons.spa_outlined, color: const Color(0xFF69F0AE)),
+            LuckIndicatorBar(label: 'Money', score: h.moneyLuck, icon: Icons.attach_money_rounded, color: const Color(0xFFD97706)),
+            LuckIndicatorBar(label: 'Love', score: h.loveLuck, icon: Icons.favorite_rounded, color: HandDrawnTokens.markerRed),
+            LuckIndicatorBar(label: 'Work', score: h.workLuck, icon: Icons.work_outline_rounded, color: HandDrawnTokens.ballpointBlue),
+            LuckIndicatorBar(label: 'Health', score: h.healthLuck, icon: Icons.spa_outlined, color: const Color(0xFF16A34A)),
           ],
         ),
       ),
@@ -785,28 +877,28 @@ class _TodayScreenState extends State<TodayScreen> {
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
-      child: GlassCard(
+      child: HandDrawnCard(
         onTap: () => _openDetail(h),
-        borderColor: isTopThree ? const Color(0xFFFFD700).withValues(alpha: 0.4) : null,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: HandDrawnCardDecoration.none,
+        backgroundColor: isTopThree ? const Color(0xFFFFFBEB) : HandDrawnTokens.cardWhite,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
           children: [
             Container(
-              width: 38,
-              height: 38,
+              width: 36,
+              height: 36,
               decoration: BoxDecoration(
-                color: isTopThree
-                    ? const Color(0xFFFFD700)
-                    : Colors.white.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
+                color: isTopThree ? HandDrawnTokens.markerRed : HandDrawnTokens.warmPaper,
+                borderRadius: HandDrawnTokens.wobblySm,
+                border: Border.all(color: HandDrawnTokens.pencilBlack, width: 2),
               ),
               child: Center(
                 child: Text(
                   '${h.rank}',
-                  style: GoogleFonts.outfit(
+                  style: HandDrawnTokens.headingFont(
                     fontSize: 16,
                     fontWeight: FontWeight.w900,
-                    color: isTopThree ? Colors.black : Colors.white,
+                    color: isTopThree ? HandDrawnTokens.warmPaper : HandDrawnTokens.pencilBlack,
                   ),
                 ),
               ),
@@ -822,23 +914,29 @@ class _TodayScreenState extends State<TodayScreen> {
                     children: [
                       Text(
                         h.signName,
-                        style: GoogleFonts.outfit(
+                        style: HandDrawnTokens.headingFont(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: HandDrawnTokens.pencilBlack,
                         ),
                       ),
                       const SizedBox(width: 6),
                       Text(
                         h.signNameJapanese,
-                        style: TextStyle(fontSize: 12, color: Colors.white.withValues(alpha: 0.55)),
+                        style: HandDrawnTokens.bodyFont(
+                          fontSize: 13,
+                          color: HandDrawnTokens.erasedPencil,
+                        ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 2),
                   Text(
                     '${h.luckyColor} • ${h.luckyItem}',
-                    style: TextStyle(fontSize: 12.5, color: Colors.white.withValues(alpha: 0.75)),
+                    style: HandDrawnTokens.bodyFont(
+                      fontSize: 13.5,
+                      color: HandDrawnTokens.pencilBlack.withValues(alpha: 0.8),
+                    ),
                   ),
                 ],
               ),
@@ -849,11 +947,11 @@ class _TodayScreenState extends State<TodayScreen> {
               decoration: BoxDecoration(
                 color: color,
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.white24),
+                border: Border.all(color: HandDrawnTokens.pencilBlack, width: 1.5),
               ),
             ),
             const SizedBox(width: 8),
-            const Icon(Icons.chevron_right_rounded, color: Colors.white38, size: 18),
+            Icon(Icons.chevron_right_rounded, color: HandDrawnTokens.pencilBlack.withValues(alpha: 0.4), size: 18),
           ],
         ),
       ),
@@ -863,9 +961,9 @@ class _TodayScreenState extends State<TodayScreen> {
   Widget _buildDailyConsensusCard(DailyConsensusPoint point) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
-      child: GlassCard(
-        backgroundColor: const Color(0xFF131B2E).withValues(alpha: 0.8),
-        borderColor: point.color.withValues(alpha: 0.4),
+      child: HandDrawnCard(
+        decoration: HandDrawnCardDecoration.none,
+        backgroundColor: HandDrawnTokens.cardWhite,
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -880,8 +978,8 @@ class _TodayScreenState extends State<TodayScreen> {
                     children: [
                       Text(
                         point.domain.toUpperCase(),
-                        style: GoogleFonts.outfit(
-                          fontSize: 10.5,
+                        style: HandDrawnTokens.headingFont(
+                          fontSize: 11,
                           fontWeight: FontWeight.bold,
                           color: point.color,
                           letterSpacing: 1.1,
@@ -889,10 +987,10 @@ class _TodayScreenState extends State<TodayScreen> {
                       ),
                       Text(
                         point.consensusTitle,
-                        style: GoogleFonts.outfit(
-                          fontSize: 15.5,
+                        style: HandDrawnTokens.headingFont(
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: HandDrawnTokens.pencilBlack,
                         ),
                       ),
                     ],
@@ -904,26 +1002,26 @@ class _TodayScreenState extends State<TodayScreen> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.04),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+                color: HandDrawnTokens.warmPaper,
+                borderRadius: HandDrawnTokens.wobblySm,
+                border: Border.all(color: HandDrawnTokens.pencilBlack, width: 1.5),
               ),
               child: Text(
                 point.synthesis,
-                style: const TextStyle(
-                  fontSize: 13.5,
-                  height: 1.5,
-                  color: Colors.white,
+                style: HandDrawnTokens.bodyFont(
+                  fontSize: 14.5,
+                  height: 1.45,
+                  color: HandDrawnTokens.pencilBlack,
                 ),
               ),
             ),
             const SizedBox(height: 10),
             Text(
               'Converging Traditions:',
-              style: TextStyle(
-                fontSize: 11.5,
-                fontWeight: FontWeight.w600,
-                color: Colors.white.withValues(alpha: 0.65),
+              style: HandDrawnTokens.headingFont(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: HandDrawnTokens.erasedPencil,
               ),
             ),
             const SizedBox(height: 6),
@@ -931,20 +1029,10 @@ class _TodayScreenState extends State<TodayScreen> {
               spacing: 6,
               runSpacing: 6,
               children: point.convergingTraditions.map((t) {
-                return Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: point.color.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: point.color.withValues(alpha: 0.3)),
-                  ),
-                  child: Text(
-                    t,
-                    style: TextStyle(
-                      fontSize: 11.5,
-                      color: Colors.white.withValues(alpha: 0.95),
-                    ),
-                  ),
+                return HandDrawnBadge(
+                  label: t,
+                  color: point.color,
+                  isPostIt: false,
                 );
               }).toList(),
             ),

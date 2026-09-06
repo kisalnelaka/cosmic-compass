@@ -35,7 +35,7 @@ void main() {
     expect(find.text('Codex'), findsOneWidget);
 
     // Verify Today screen content renders
-    expect(find.text('DAILY COSMIC GUIDANCE'), findsOneWidget);
+    expect(find.text('DAILY FIELD NOTES'), findsOneWidget);
 
     // Tap Comparison tab and verify render
     await tester.tap(find.text('Comparison'));
@@ -45,12 +45,12 @@ void main() {
     // Tap My Charts tab and verify render
     await tester.tap(find.text('My Charts'));
     await tester.pump(const Duration(milliseconds: 300));
-    expect(find.text('MY COSMIC BLUEPRINT'), findsOneWidget);
+    expect(find.text('MY COSMIC FIELD DOSSIER'), findsOneWidget);
 
     // Tap Codex tab and verify render
     await tester.tap(find.text('Codex'));
     await tester.pump(const Duration(milliseconds: 300));
-    expect(find.text('TRADITIONS CODEX & SOURCES'), findsOneWidget);
+    expect(find.text('The World Traditions Codex'), findsOneWidget);
   });
 
   testWidgets('First-time user receives birth profile setup prompt', (WidgetTester tester) async {
@@ -61,14 +61,14 @@ void main() {
     await tester.pump(const Duration(milliseconds: 300));
 
     // Verify First-time prompt is displayed
-    expect(find.text('Welcome to Cosmic Compass'), findsOneWidget);
+    expect(find.text('Welcome to Your Cosmic Field Guide'), findsOneWidget);
     expect(find.text('Calculate My Charts & Daily Horoscope'), findsOneWidget);
     expect(find.text('Explore Default Charts First'), findsOneWidget);
 
     // Tap Explore Default Charts First
     await tester.tap(find.text('Explore Default Charts First'));
     await tester.pump(const Duration(milliseconds: 300));
-    expect(find.text('Welcome to Cosmic Compass'), findsNothing);
+    expect(find.text('Welcome to Your Cosmic Field Guide'), findsNothing);
   });
 
   test('PartnerSynastryService calculates accurate multi-cultural synastry', () {

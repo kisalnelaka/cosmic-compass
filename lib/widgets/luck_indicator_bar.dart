@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../theme/hand_drawn_tokens.dart';
 
 class LuckIndicatorBar extends StatelessWidget {
   final String label;
@@ -24,13 +25,13 @@ class LuckIndicatorBar extends StatelessWidget {
           Icon(icon, size: 16, color: color),
           const SizedBox(width: 8),
           SizedBox(
-            width: 58,
+            width: 65,
             child: Text(
               label,
-              style: GoogleFonts.outfit(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: Colors.white70,
+              style: GoogleFonts.patrickHand(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                color: HandDrawnTokens.pencilBlack,
               ),
             ),
           ),
@@ -41,17 +42,21 @@ class LuckIndicatorBar extends StatelessWidget {
                 final isFilled = index < score;
                 return Expanded(
                   child: Container(
-                    height: 6,
+                    height: 9,
                     margin: const EdgeInsets.symmetric(horizontal: 2),
                     decoration: BoxDecoration(
-                      color: isFilled ? color : Colors.white.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(3),
+                      color: isFilled ? color : HandDrawnTokens.erasedPencil,
+                      borderRadius: BorderRadius.circular(2),
+                      border: Border.all(
+                        color: HandDrawnTokens.pencilBlack,
+                        width: 1.5,
+                      ),
                       boxShadow: isFilled
-                          ? [
+                          ? const [
                               BoxShadow(
-                                color: color.withValues(alpha: 0.4),
-                                blurRadius: 4,
-                                spreadRadius: 1,
+                                color: HandDrawnTokens.pencilBlack,
+                                offset: Offset(1, 1),
+                                blurRadius: 0,
                               ),
                             ]
                           : null,

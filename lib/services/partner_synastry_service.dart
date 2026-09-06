@@ -150,7 +150,7 @@ class PartnerSynastryService {
     );
 
     final executiveSummary =
-        '${user.name} and ${partner.name} exhibit an overall synergy index of $overallScore%. Across Western elemental dynamics (${userWestern.element} + ${partnerWestern.element}) and Eastern BaZi branch resonance (${userBaZi.animal} + ${partnerBaZi.animal}), this union operates as "$archetype"—uniting complementary instincts into shared momentum.';
+        '${user.name} and ${partner.name} exhibit an overall synergy index of $overallScore%. Across Western elemental dynamics (${userWestern.element} + ${partnerWestern.element}) and Eastern BaZi branch resonance (${userBaZi.animal} + ${partnerBaZi.animal}), this union operates as "$archetype", uniting complementary instincts into shared momentum.';
 
     // Generate Domain Advice
     final domainAdvice = _generateDomainAdvice(
@@ -419,7 +419,7 @@ class PartnerSynastryService {
       score = 95;
       level = 'Galactic Occult Harmonic';
       desc =
-          'Your tones sum to 14—the magical occult complement in Mayan cosmology. You naturally reveal the hidden blind spots and dormant powers in one another.';
+          'Your tones sum to 14, the magical occult complement in Mayan cosmology. You naturally reveal the hidden blind spots and dormant powers in one another.';
     } else if ((uTone - pTone).abs() == 7) {
       score = 90;
       level = 'Resonant Tone Bridge';
@@ -482,7 +482,7 @@ class PartnerSynastryService {
         dynamicSummary:
             'BaZi branches (${uB.animal} & ${pB.animal}) paired with Blood Types (${uBlood.shortName} & ${pBlood.shortName}) create high creative magnetism.',
         actionRecommendation:
-            'Keep curiosity active through spontaneous shared novelty—try unfamiliar cuisines, travel to unmapped places, and champion each other\'s eccentric hobbies.',
+            'Keep curiosity active through spontaneous shared novelty: try unfamiliar cuisines, travel to unmapped places, and champion each other\'s eccentric hobbies.',
         icon: Icons.favorite_border,
         color: const Color(0xFFFF5252),
       ),

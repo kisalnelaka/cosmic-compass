@@ -182,7 +182,7 @@ class DailyPredictionService {
   static String _getDailyBloodTypeTip(BloodType type, int combo) {
     switch (type) {
       case BloodType.a:
-        return 'Methodical focus will keep you three steps ahead today. Avoid overthinking other people’s words—trust your proven preparation.';
+        return 'Methodical focus will keep you three steps ahead today. Avoid overthinking other people’s words: trust your proven preparation.';
       case BloodType.b:
         return 'Spontaneous creativity is your superpower today. Share your unique insight in meetings; people are ready to embrace fresh angles.';
       case BloodType.ab:

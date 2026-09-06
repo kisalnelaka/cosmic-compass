@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../models/horoscope.dart';
 import '../services/color_mapper.dart';
-import '../widgets/glass_card.dart';
+import '../theme/hand_drawn_tokens.dart';
+import '../widgets/hand_drawn_card.dart';
+import '../widgets/hand_drawn_button.dart';
 import '../widgets/luck_indicator_bar.dart';
 
 class DetailDialog extends StatelessWidget {
@@ -22,10 +23,9 @@ class DetailDialog extends StatelessWidget {
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 480),
-          child: GlassCard(
-            backgroundColor: const Color(0xFF0F172A).withValues(alpha: 0.96),
-            borderColor: isTopThree ? const Color(0xFFFFD700).withValues(alpha: 0.5) : Colors.white.withValues(alpha: 0.15),
-            borderRadius: 24,
+          child: HandDrawnCard(
+            decoration: HandDrawnCardDecoration.tape,
+            backgroundColor: isTopThree ? HandDrawnTokens.postItYellow : HandDrawnTokens.cardWhite,
             padding: const EdgeInsets.all(22),
             child: SingleChildScrollView(
               child: Column(
@@ -42,18 +42,18 @@ class DetailDialog extends StatelessWidget {
                             width: 48,
                             height: 48,
                             decoration: BoxDecoration(
-                              gradient: isTopThree
-                                  ? const LinearGradient(colors: [Color(0xFFFFD700), Color(0xFFFFA000)])
-                                  : const LinearGradient(colors: [Color(0xFF334155), Color(0xFF1E293B)]),
-                              borderRadius: BorderRadius.circular(14),
+                              color: isTopThree ? HandDrawnTokens.markerRed : HandDrawnTokens.warmPaper,
+                              borderRadius: HandDrawnTokens.wobblySm,
+                              border: Border.all(color: HandDrawnTokens.pencilBlack, width: 2),
+                              boxShadow: HandDrawnTokens.hardShadowSm,
                             ),
                             child: Center(
                               child: Text(
                                 '#${horoscope.rank}',
-                                style: GoogleFonts.outfit(
-                                  fontSize: 20,
+                                style: HandDrawnTokens.headingFont(
+                                  fontSize: 22,
                                   fontWeight: FontWeight.w900,
-                                  color: isTopThree ? Colors.black : Colors.white,
+                                  color: isTopThree ? HandDrawnTokens.warmPaper : HandDrawnTokens.pencilBlack,
                                 ),
                               ),
                             ),
@@ -66,22 +66,28 @@ class DetailDialog extends StatelessWidget {
                                 children: [
                                   Text(
                                     '${horoscope.icon} ${horoscope.signName}',
-                                    style: GoogleFonts.outfit(
+                                    style: HandDrawnTokens.headingFont(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.white,
+                                      color: HandDrawnTokens.pencilBlack,
                                     ),
                                   ),
                                   const SizedBox(width: 8),
                                   Text(
                                     horoscope.signNameJapanese,
-                                    style: TextStyle(fontSize: 13, color: Colors.white.withValues(alpha: 0.6)),
+                                    style: HandDrawnTokens.bodyFont(
+                                      fontSize: 14,
+                                      color: HandDrawnTokens.erasedPencil,
+                                    ),
                                   ),
                                 ],
                               ),
                               Text(
                                 horoscope.period,
-                                style: TextStyle(fontSize: 12, color: Colors.white.withValues(alpha: 0.6)),
+                                style: HandDrawnTokens.bodyFont(
+                                  fontSize: 13,
+                                  color: HandDrawnTokens.erasedPencil,
+                                ),
                               ),
                             ],
                           ),
@@ -89,7 +95,7 @@ class DetailDialog extends StatelessWidget {
                       ),
                       IconButton(
                         onPressed: () => Navigator.pop(context),
-                        icon: const Icon(Icons.close_rounded, color: Colors.white54, size: 20),
+                        icon: Icon(Icons.close_rounded, color: HandDrawnTokens.pencilBlack, size: 22),
                       ),
                     ],
                   ),
@@ -99,23 +105,23 @@ class DetailDialog extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.05),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+                      color: HandDrawnTokens.warmPaper,
+                      borderRadius: HandDrawnTokens.wobblySm,
+                      border: Border.all(color: HandDrawnTokens.pencilBlack, width: 1.5),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
-                            const Icon(Icons.auto_awesome, color: Color(0xFFFFD700), size: 16),
+                            Icon(Icons.auto_awesome, color: HandDrawnTokens.markerRed, size: 18),
                             const SizedBox(width: 8),
                             Text(
                               'DAILY ADVICE',
-                              style: GoogleFonts.outfit(
+                              style: HandDrawnTokens.headingFont(
                                 fontSize: 11,
                                 fontWeight: FontWeight.bold,
-                                color: const Color(0xFFFFD700),
+                                color: HandDrawnTokens.markerRed,
                                 letterSpacing: 1.2,
                               ),
                             ),
@@ -124,10 +130,10 @@ class DetailDialog extends StatelessWidget {
                         const SizedBox(height: 8),
                         Text(
                           horoscope.description,
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: HandDrawnTokens.bodyFont(
+                            color: HandDrawnTokens.pencilBlack,
                             height: 1.5,
-                            fontSize: 14,
+                            fontSize: 14.5,
                           ),
                         ),
                       ],
@@ -142,26 +148,43 @@ class DetailDialog extends StatelessWidget {
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.06),
-                            borderRadius: BorderRadius.circular(14),
-                            border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                            color: HandDrawnTokens.warmPaper,
+                            borderRadius: HandDrawnTokens.wobblySm,
+                            border: Border.all(color: HandDrawnTokens.pencilBlack, width: 1.5),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 'LUCKY COLOR',
-                                style: GoogleFonts.outfit(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white60, letterSpacing: 0.8),
+                                style: HandDrawnTokens.headingFont(
+                                  fontSize: 10.5,
+                                  fontWeight: FontWeight.bold,
+                                  color: HandDrawnTokens.erasedPencil,
+                                  letterSpacing: 0.8,
+                                ),
                               ),
                               const SizedBox(height: 6),
                               Row(
                                 children: [
-                                  Container(width: 14, height: 14, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+                                  Container(
+                                    width: 14,
+                                    height: 14,
+                                    decoration: BoxDecoration(
+                                      color: color,
+                                      shape: BoxShape.circle,
+                                      border: Border.all(color: HandDrawnTokens.pencilBlack, width: 1.5),
+                                    ),
+                                  ),
                                   const SizedBox(width: 8),
                                   Expanded(
                                     child: Text(
                                       horoscope.luckyColor,
-                                      style: const TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.w600),
+                                      style: HandDrawnTokens.bodyFont(
+                                        fontSize: 14,
+                                        color: HandDrawnTokens.pencilBlack,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -175,21 +198,30 @@ class DetailDialog extends StatelessWidget {
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.06),
-                            borderRadius: BorderRadius.circular(14),
-                            border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                            color: HandDrawnTokens.warmPaper,
+                            borderRadius: HandDrawnTokens.wobblySm,
+                            border: Border.all(color: HandDrawnTokens.pencilBlack, width: 1.5),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 'LUCKY ITEM',
-                                style: GoogleFonts.outfit(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white60, letterSpacing: 0.8),
+                                style: HandDrawnTokens.headingFont(
+                                  fontSize: 10.5,
+                                  fontWeight: FontWeight.bold,
+                                  color: HandDrawnTokens.erasedPencil,
+                                  letterSpacing: 0.8,
+                                ),
                               ),
                               const SizedBox(height: 6),
                               Text(
                                 horoscope.luckyItem,
-                                style: const TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.w600),
+                                style: HandDrawnTokens.bodyFont(
+                                  fontSize: 14,
+                                  color: HandDrawnTokens.pencilBlack,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ],
                           ),
@@ -200,31 +232,25 @@ class DetailDialog extends StatelessWidget {
                   const SizedBox(height: 16),
 
                   // 4 Segmented Luck Indicator Bars
-                  LuckIndicatorBar(label: 'Money', score: horoscope.moneyLuck, icon: Icons.attach_money_rounded, color: const Color(0xFFFFD700)),
-                  LuckIndicatorBar(label: 'Love', score: horoscope.loveLuck, icon: Icons.favorite_rounded, color: const Color(0xFFFF4081)),
-                  LuckIndicatorBar(label: 'Work', score: horoscope.workLuck, icon: Icons.work_outline_rounded, color: const Color(0xFF00E5FF)),
-                  LuckIndicatorBar(label: 'Health', score: horoscope.healthLuck, icon: Icons.spa_outlined, color: const Color(0xFF69F0AE)),
+                  LuckIndicatorBar(label: 'Money', score: horoscope.moneyLuck, icon: Icons.attach_money_rounded, color: const Color(0xFFD97706)),
+                  LuckIndicatorBar(label: 'Love', score: horoscope.loveLuck, icon: Icons.favorite_rounded, color: HandDrawnTokens.markerRed),
+                  LuckIndicatorBar(label: 'Work', score: horoscope.workLuck, icon: Icons.work_outline_rounded, color: HandDrawnTokens.ballpointBlue),
+                  LuckIndicatorBar(label: 'Health', score: horoscope.healthLuck, icon: Icons.spa_outlined, color: const Color(0xFF16A34A)),
                   const SizedBox(height: 20),
 
                   // Dismiss Button
                   SizedBox(
                     width: double.infinity,
-                    height: 48,
-                    child: ElevatedButton(
+                    child: HandDrawnButton(
+                      text: 'Close Window',
+                      variant: HandDrawnButtonVariant.secondary,
                       onPressed: () => Navigator.pop(context),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white.withValues(alpha: 0.08),
-                        foregroundColor: Colors.white,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                      ),
-                      child: Text('Close', style: GoogleFonts.outfit(fontSize: 14, fontWeight: FontWeight.bold)),
                     ),
                   ),
                 ],
               ),
             ),
-          ).animate().scale(duration: 300.ms, curve: Curves.easeOutBack),
+          ).animate().scale(duration: 250.ms, curve: Curves.easeOutBack),
         ),
       ),
     );
