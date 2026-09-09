@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 import 'package:html/dom.dart';
@@ -26,7 +28,14 @@ class HoroscopeService {
   };
 
   Future<List<Horoscope>> fetchHoroscopes() async {
-    // On web or when CORS restricts client-side scraping, use astronomical daily ranking fallback
+    // Attempt to load official daily TV broadcast data from bundled asset or cache first
+    try {
+      final bundled = await _loadBundledDailyTvHoroscopes();
+      if (bundled != null && bundled.length == 12) {
+        return bundled;
+      }
+    } catch (_) {}
+
     if (kIsWeb) {
       return _generateDailyCalculatedHoroscopes(DateTime.now());
     }
@@ -235,5 +244,36 @@ class HoroscopeService {
     }
 
     return list;
+  }
+
+  /// Loads daily TV Asahi broadcast rankings bundled directly with the application
+  static Future<List<Horoscope>?> _loadBundledDailyTvHoroscopes() async {
+    try {
+      final jsonString = await rootBundle.loadString('assets/data/daily_tv_horoscopes.json');
+      final Map<String, dynamic> data = json.decode(jsonString);
+      final List<dynamic> rawList = data['horoscopes'] as List<dynamic>;
+
+      final list = rawList.map((item) {
+        return Horoscope(
+          signName: item['signName'] as String,
+          signNameJapanese: item['signNameJapanese'] as String,
+          rank: item['rank'] as int,
+          luckyColor: item['luckyColor'] as String,
+          luckyItem: item['luckyItem'] as String,
+          description: item['description'] as String,
+          moneyLuck: ((item['moneyLuck'] as num?)?.toInt() ?? 4).clamp(1, 5),
+          loveLuck: ((item['loveLuck'] as num?)?.toInt() ?? 4).clamp(1, 5),
+          workLuck: ((item['workLuck'] as num?)?.toInt() ?? 4).clamp(1, 5),
+          healthLuck: ((item['healthLuck'] as num?)?.toInt() ?? 4).clamp(1, 5),
+          period: item['period'] as String,
+          icon: item['icon'] as String,
+        );
+      }).toList();
+
+      list.sort((a, b) => a.rank.compareTo(b.rank));
+      return list;
+    } catch (_) {
+      return null;
+    }
   }
 }
