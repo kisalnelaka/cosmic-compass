@@ -760,7 +760,7 @@ class _TodayScreenState extends State<TodayScreen> {
                           ],
                         ),
                         Text(
-                          'Your Morning TV Fortune',
+                          kIsWeb ? 'Daily Field Guide Ranking' : 'Your Morning TV Fortune',
                           style: HandDrawnTokens.bodyFont(
                             fontSize: 13.5,
                             color: HandDrawnTokens.markerRed,
