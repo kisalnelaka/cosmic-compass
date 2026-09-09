@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <gradient
-        android:angle="135"
-        android:endColor="#8E24AA"
-        android:startColor="#1A237E"
-        android:type="linear" />
-    <corners android:radius="16dp" />
-</shape>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Hard offset pencil shadow (3dp down and right) -->
+    <item
+        android:left="3dp"
+        android:top="3dp">
+        <shape>
+            <solid android:color="#22201D" />
+            <corners android:radius="14dp" />
+        </shape>
+    </item>
+    <!-- Foreground Post-it note surface with graphite pencil border -->
+    <item
+        android:bottom="3dp"
+        android:right="3dp">
+        <shape>
+            <solid android:color="#FFF9C4" />
+            <stroke
+                android:width="2.5dp"
+                android:color="#22201D" />
+            <corners android:radius="14dp" />
+        </shape>
+    </item>
+</layer-list>

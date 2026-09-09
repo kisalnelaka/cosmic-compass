@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../models/horoscope.dart';
 import '../models/user_profile.dart';
@@ -38,6 +39,7 @@ class _TodayScreenState extends State<TodayScreen> {
   late List<DailyCulturalForecast> _dailyForecasts;
   late List<DailyConsensusPoint> _dailyConsensus;
   bool _notificationsEnabled = true;
+  Horoscope? _userHoroscope;
 
   static const List<String> _months = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -96,6 +98,10 @@ class _TodayScreenState extends State<TodayScreen> {
       _notificationsEnabled = newState;
     });
 
+    if (newState && _userHoroscope != null) {
+      await NotificationService.showDailyHoroscopeAlert(_userHoroscope!);
+    }
+
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -104,7 +110,7 @@ class _TodayScreenState extends State<TodayScreen> {
         shape: RoundedRectangleBorder(borderRadius: HandDrawnTokens.wobblySm),
         content: Text(
           newState
-              ? 'Morning notifications turned on (7:00 AM fortune alert)'
+              ? 'Morning notifications turned on. Sent your daily fortune alert!'
               : 'Morning notifications turned off',
           style: HandDrawnTokens.bodyFont(color: HandDrawnTokens.warmPaper, fontSize: 14),
         ),
@@ -365,6 +371,7 @@ class _TodayScreenState extends State<TodayScreen> {
                   }
                 }
                 userHoroscope ??= list.first;
+                _userHoroscope = userHoroscope;
 
                 // Sync with Home Screen Widget for mobile
                 WidgetService.updateWidget(userHoroscope);
@@ -614,7 +621,9 @@ class _TodayScreenState extends State<TodayScreen> {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        'おはよう朝日です • Japan’s Official 12-Sign Daily Fortune',
+                        kIsWeb
+                            ? 'おはよう朝日です • Planetary Daily Ranking & Field Guide'
+                            : 'おはよう朝日です • Live TV Asahi Morning Fortune Broadcast',
                         style: HandDrawnTokens.bodyFont(
                           fontSize: 13.5,
                           color: HandDrawnTokens.erasedPencil,
